@@ -1,0 +1,19 @@
+body {
+  background-image: url("/background.jpg");
+  background-size: cover;
+}
+html {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+* {
+  margin: 0;
+  box-sizing: border-box;
+}
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+}
