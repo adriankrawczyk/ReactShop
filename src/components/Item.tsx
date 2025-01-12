@@ -19,6 +19,8 @@ const ImageContainer = styled.div`
   width: 200px;
   height: 100%;
   border-right: 2px solid #bbb;
+  display: flex;
+  justify-content: center;
 `;
 
 const TitleContainer = styled.div`

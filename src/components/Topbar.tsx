@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { useAppContext } from "../AppContext";
 
 const TopbarContainer = styled.div`
   display: flex;
@@ -26,10 +27,11 @@ const Input = styled.input`
 `;
 
 const Topbar = () => {
+  const { setInputValue } = useAppContext();
   return (
     <TopbarContainer>
       <InputContainer>
-        <Input></Input>
+        <Input onChange={(e) => setInputValue(e.target.value)}></Input>
       </InputContainer>
     </TopbarContainer>
   );
