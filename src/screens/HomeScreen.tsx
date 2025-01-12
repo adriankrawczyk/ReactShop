@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { StyleScheme } from "../Schemes/StyleScheme";
 import ItemMapper from "../components/ItemMapper";
+import Topbar from "../components/Topbar";
 
 const HomeWrapper = styled.div`
   display: flex;
@@ -20,14 +21,6 @@ const MainBox = styled.div`
   );
   box-shadow: ${StyleScheme.boxShadow};
   border-radius: ${StyleScheme.borderRadius};
-`;
-const Topbar = styled.div`
-  display: flex;
-  align-items: center;
-  position: absolute;
-  width: 90vw;
-  height: 10vh;
-  border-bottom: 1px solid #bbb;
 `;
 
 const SideBar = styled.div`
@@ -58,7 +51,6 @@ const ContentDisplayer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  overflow-y: scroll;
 `;
 
 const HomeScreen = () => {
