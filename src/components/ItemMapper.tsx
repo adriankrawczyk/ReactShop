@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import Item from "./Item";
 import ItemInterface from "../Interfaces/ItemInterface";
@@ -25,9 +26,10 @@ const ItemMapper = () => {
       .then((res) => res.json())
       .then((json) => {
         setData(json);
-        console.log(json);
+        setDisplayData(json);
       });
   }, []);
+
   useEffect(() => {
     setDisplayData(
       data.filter((e) =>
@@ -38,9 +40,14 @@ const ItemMapper = () => {
   return (
     <ItemMapperWrapper>
       {displayData.map((el) => {
-        const { title, description, image } = el;
+        const { title, description, image, price } = el;
         return (
-          <Item title={title} description={description} image={image}></Item>
+          <Item
+            title={title}
+            description={description}
+            image={image}
+            price={price}
+          ></Item>
         );
       })}
     </ItemMapperWrapper>
