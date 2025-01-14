@@ -6,6 +6,7 @@ const ColorScheme = {
 const StyleScheme = {
   borderRadius: "3%",
   boxShadow: "0px 0px 10px -5px rgba(66, 68, 90, 1)",
+  borderColor: "#bbb",
 };
 
 const WithTransition = () => {

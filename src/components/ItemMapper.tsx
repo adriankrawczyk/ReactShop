@@ -18,8 +18,7 @@ const ItemMapperWrapper = styled.div`
 `;
 
 const ItemMapper = () => {
-  const { cart, inputValue, cartMode } = useAppContext();
-  const [data, setData] = useState<Array<ItemInterface>>([]);
+  const { cart, inputValue, cartMode, data, setData } = useAppContext();
   const [displayData, setDisplayData] = useState<Array<ItemInterface>>([]);
   useEffect(() => {
     fetch("https://fakestoreapi.com/products")
@@ -40,13 +39,14 @@ const ItemMapper = () => {
   return (
     <ItemMapperWrapper>
       {displayData.map((el) => {
-        const { title, description, image, price } = el;
+        const { title, description, image, price, category } = el;
         return (
           <Item
             title={title}
             description={description}
             image={image}
             price={price}
+            category={category}
           ></Item>
         );
       })}

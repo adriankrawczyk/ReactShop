@@ -1,6 +1,7 @@
 import React, { createContext, useState, ReactNode } from "react";
 import AppContextType from "./AppContextInterface";
 import { useContext } from "react";
+import ItemInterface from "./Interfaces/ItemInterface";
 
 export const AppContext = createContext<AppContextType | null>(null);
 
@@ -10,6 +11,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
   const [inputValue, setInputValue] = useState("");
   const [cart, setCart] = useState<Array<string>>([]);
   const [cartMode, setCartMode] = useState(false);
+  const [data, setData] = useState<Array<ItemInterface>>([]);
+
   return (
     <AppContext.Provider
       value={{
@@ -19,6 +22,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
         setCart,
         cartMode,
         setCartMode,
+        data,
+        setData,
       }}
     >
       {children}
