@@ -8,4 +8,10 @@ const StyleScheme = {
   boxShadow: "0px 0px 10px -5px rgba(66, 68, 90, 1)",
 };
 
-export { ColorScheme, StyleScheme };
+const WithTransition = () => {
+  return `transition: transform 0.25s ease-in-out;
+  &:hover {
+    transform: scale(1.125);
+  }`;
+};
+export { ColorScheme, StyleScheme, WithTransition };

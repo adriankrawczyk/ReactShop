@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { useAppContext } from "../AppContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
+import { WithTransition } from "../Schemes/StyleScheme";
 
 const TopbarContainer = styled.div`
   display: flex;
@@ -29,7 +30,7 @@ const Input = styled.input`
   border-bottom: 0;
 `;
 
-const CartButton = styled.div`
+const CartButton = styled.div<{ $active?: boolean; $empty?: boolean }>`
   cursor: pointer;
   width: 50px;
   height: 50px;
@@ -39,17 +40,26 @@ const CartButton = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgb(187, 255, 187);
+  background-color: ${({ $empty, $active }) =>
+    $empty ? "white" : $active ? "rgb(187, 255, 187)" : "rgb(255, 243, 187)"};
+  ${WithTransition()}
 `;
 
 const Topbar = () => {
-  const { setInputValue } = useAppContext();
+  const { setInputValue, cartMode, setCartMode, cart } = useAppContext();
+  const isCartEmpty = cart.length === 0 && !cartMode;
   return (
     <TopbarContainer>
       <InputContainer>
         <Input onChange={(e) => setInputValue(e.target.value)}></Input>
       </InputContainer>
-      <CartButton>
+      <CartButton
+        $empty={isCartEmpty}
+        $active={!isCartEmpty && !cartMode}
+        onClick={() => {
+          if (!isCartEmpty) setCartMode(!cartMode);
+        }}
+      >
         <FontAwesomeIcon style={{ fontSize: "2em" }} icon={faCartShopping} />
       </CartButton>
     </TopbarContainer>

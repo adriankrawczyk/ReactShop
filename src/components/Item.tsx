@@ -1,5 +1,9 @@
 import styled from "styled-components";
 import ItemInterface from "../Interfaces/ItemInterface";
+import { WithTransition } from "../Schemes/StyleScheme";
+import { useAppContext } from "../AppContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus, faX } from "@fortawesome/free-solid-svg-icons";
 
 const ItemElement = styled.div`
   display: flex;
@@ -33,11 +37,13 @@ const TitleContainer = styled.div`
   font-weight: 600;
   text-align: center;
 `;
+
 const TitleAndDescriptionContainer = styled.div`
   width: 80%;
   display: flex;
   align-items: center;
 `;
+
 const Image = styled.img`
   width: 120px;
   border-left: 2px solid #bbb;
@@ -57,28 +63,42 @@ const Price = styled.div`
   font-size: 1.2em;
 `;
 
-const AddButton = styled.div`
+const AddButton = styled.div<{ $add: boolean }>`
   position: absolute;
   width: 40px;
   height: 40px;
   bottom: 10px;
   border: 2px solid #bbb;
-  background-color: rgb(187, 255, 187);
+  background-color: ${({ $add }) =>
+    $add ? "rgb(187, 255, 187)" : "rgb(255, 194, 181)"};
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 4em;
+  font-size: 2em;
   cursor: pointer;
+
+  ${WithTransition()}
 `;
 
 const Item = ({ title, image, price }: ItemInterface) => {
+  const { cart, setCart, cartMode } = useAppContext();
+
   return (
     <>
       <ItemElement>
         <ImageContainer>
           <ItemInfo>
             <Price>{price}$</Price>
-            <AddButton>+</AddButton>
+
+            <AddButton
+              $add={!cartMode}
+              onClick={() => {
+                if (!cartMode) setCart([...cart, title]);
+                else setCart(cart.filter((item) => item !== title));
+              }}
+            >
+              <FontAwesomeIcon icon={cartMode ? faX : faPlus} />
+            </AddButton>
           </ItemInfo>
           <Image src={image}></Image>
         </ImageContainer>

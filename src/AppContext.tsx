@@ -8,8 +8,19 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [inputValue, setInputValue] = useState("");
+  const [cart, setCart] = useState<Array<string>>([]);
+  const [cartMode, setCartMode] = useState(false);
   return (
-    <AppContext.Provider value={{ inputValue, setInputValue }}>
+    <AppContext.Provider
+      value={{
+        inputValue,
+        setInputValue,
+        cart,
+        setCart,
+        cartMode,
+        setCartMode,
+      }}
+    >
       {children}
     </AppContext.Provider>
   );

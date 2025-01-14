@@ -18,7 +18,7 @@ const ItemMapperWrapper = styled.div`
 `;
 
 const ItemMapper = () => {
-  const { inputValue } = useAppContext();
+  const { cart, inputValue, cartMode } = useAppContext();
   const [data, setData] = useState<Array<ItemInterface>>([]);
   const [displayData, setDisplayData] = useState<Array<ItemInterface>>([]);
   useEffect(() => {
@@ -32,11 +32,11 @@ const ItemMapper = () => {
 
   useEffect(() => {
     setDisplayData(
-      data.filter((e) =>
-        e.title.toLowerCase().includes(inputValue.toLowerCase())
-      )
+      data
+        .filter((e) => e.title.toLowerCase().includes(inputValue.toLowerCase()))
+        .filter((e) => cart.includes(e.title) === cartMode)
     );
-  }, [inputValue]);
+  }, [inputValue, cart, cartMode]);
   return (
     <ItemMapperWrapper>
       {displayData.map((el) => {
