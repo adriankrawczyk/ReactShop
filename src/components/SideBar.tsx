@@ -1,5 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import styled from "styled-components";
 import { useAppContext } from "../AppContext";
+import { useEffect } from "react";
 
 const SideBarContainer = styled.div`
   position: absolute;
@@ -9,7 +11,7 @@ const SideBarContainer = styled.div`
   border-right: 1px solid #bbb;
 `;
 
-const CategoryBar = styled.div`
+const CategoryBar = styled.div<{ $active: boolean }>`
   width: 100%;
   height: 40px;
   border-bottom: 1px solid #bbb;
@@ -18,10 +20,18 @@ const CategoryBar = styled.div`
   align-items: center;
   font-weight: 600;
   flex-wrap: wrap;
+  background-color: ${({ $active }) =>
+    $active ? "rgb(187, 255, 187)" : "transparent"};
+  cursor: pointer;
+  transition: font-size 0.25s ease-in-out;
+  &:hover {
+    font-size: 1.125em;
+  }
 `;
 
 const SideBar = () => {
-  const { data } = useAppContext();
+  const { data, activeCategoryArray, setActiveCategoryArray } = useAppContext();
+
   const uniqueCategories = [
     ...new Set(
       data.map(
@@ -30,10 +40,28 @@ const SideBar = () => {
     ),
   ];
 
+  useEffect(() => {
+    setActiveCategoryArray(new Array(uniqueCategories.length).fill(false));
+  }, [uniqueCategories.length]);
+
+  const handleCategoryClick = (index: number) => {
+    const updatedActiveArray = [...activeCategoryArray];
+    updatedActiveArray[index] = !updatedActiveArray[index];
+    setActiveCategoryArray(updatedActiveArray);
+  };
+
   return (
     <SideBarContainer>
       {uniqueCategories.map((category, index) => {
-        return <CategoryBar key={index}>{category}</CategoryBar>;
+        return (
+          <CategoryBar
+            $active={activeCategoryArray[index]}
+            key={index}
+            onClick={() => handleCategoryClick(index)}
+          >
+            {category}
+          </CategoryBar>
+        );
       })}
     </SideBarContainer>
   );

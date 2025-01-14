@@ -9,6 +9,8 @@ interface AppContextType {
   setCartMode: (value: boolean) => void;
   data: Array<ItemInterface>;
   setData: (value: Array<ItemInterface>) => void;
+  activeCategoryArray: Array<boolean>;
+  setActiveCategoryArray: (value: Array<boolean>) => void;
 }
 
 export default AppContextType;

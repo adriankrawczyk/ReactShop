@@ -18,24 +18,35 @@ const ItemMapperWrapper = styled.div`
 `;
 
 const ItemMapper = () => {
-  const { cart, inputValue, cartMode, data, setData } = useAppContext();
+  const { cart, inputValue, cartMode, data, setData, activeCategoryArray } =
+    useAppContext();
   const [displayData, setDisplayData] = useState<Array<ItemInterface>>([]);
+  const [uniqueCategories, setUniqueCategories] = useState<Array<string>>([]);
   useEffect(() => {
     fetch("https://fakestoreapi.com/products")
       .then((res) => res.json())
       .then((json) => {
         setData(json);
         setDisplayData(json);
+        setUniqueCategories([...new Set(data.map(({ category }) => category))]);
       });
   }, []);
 
   useEffect(() => {
+    const areAllCategoriesInactive = activeCategoryArray.every(
+      (active) => !active
+    );
     setDisplayData(
       data
         .filter((e) => e.title.toLowerCase().includes(inputValue.toLowerCase()))
         .filter((e) => cart.includes(e.title) === cartMode)
+        .filter((e) => {
+          return areAllCategoriesInactive
+            ? true
+            : activeCategoryArray[uniqueCategories.indexOf(e.category)];
+        })
     );
-  }, [inputValue, cart, cartMode]);
+  }, [inputValue, cart, cartMode, activeCategoryArray]);
   return (
     <ItemMapperWrapper>
       {displayData.map((el) => {

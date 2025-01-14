@@ -12,6 +12,9 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
   const [cart, setCart] = useState<Array<string>>([]);
   const [cartMode, setCartMode] = useState(false);
   const [data, setData] = useState<Array<ItemInterface>>([]);
+  const [activeCategoryArray, setActiveCategoryArray] = useState<
+    Array<boolean>
+  >([]);
 
   return (
     <AppContext.Provider
@@ -24,6 +27,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
         setCartMode,
         data,
         setData,
+        activeCategoryArray,
+        setActiveCategoryArray,
       }}
     >
       {children}

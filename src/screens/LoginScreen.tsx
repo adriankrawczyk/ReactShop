@@ -38,9 +38,10 @@ const Input = styled.input`
   font-size: 16px;
   border: 2px solid ${StyleScheme.borderColor};
   outline: none;
-
+ font-weight: 600;
   &::placeholder {
-    color: #bbb };
+    color: #bbb
+    };
   }
 `;
 
