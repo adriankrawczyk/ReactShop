@@ -20,12 +20,14 @@ const CategoryBar = styled.div<{ $active: boolean }>`
   align-items: center;
   font-weight: 600;
   flex-wrap: wrap;
+  text-wrap: nowrap;
   background-color: ${({ $active }) =>
     $active ? "rgb(187, 255, 187)" : "transparent"};
   cursor: pointer;
   transition: font-size 0.25s ease-in-out;
+  font-size: 1.2vw;
   &:hover {
-    font-size: 1.125em;
+    font-size: 1.33vw;
   }
 `;
 

@@ -3,7 +3,7 @@ import ItemInterface from "../Interfaces/ItemInterface";
 import { WithTransition } from "../Schemes/StyleScheme";
 import { useAppContext } from "../AppContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faX } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faX, faStar } from "@fortawesome/free-solid-svg-icons";
 
 const ItemElement = styled.div`
   display: flex;
@@ -28,18 +28,19 @@ const ImageContainer = styled.div`
 `;
 
 const TitleContainer = styled.div`
-  width: 50%;
+  width: 15vw;
+  padding: 1vw;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-left: 20px;
-  font-size: 1.5vw;
+  font-size: 1.25vw;
   font-weight: 600;
   text-align: center;
+  border-right: 2px solid #bbb;
 `;
 
 const TitleAndDescriptionContainer = styled.div`
-  width: 80%;
   display: flex;
   align-items: center;
 `;
@@ -80,6 +81,24 @@ const AddButton = styled.div<{ $add: boolean }>`
   ${WithTransition()}
 `;
 
+const OtherInfoContainer = styled.div`
+  width: 35vw;
+  height: 100%;
+  position: relative;
+`;
+
+const StarsContainer = styled.div`
+  position: absolute;
+  right: 0;
+  margin-top: 2vmin;
+  margin-right: 2vmin;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5vw;
+  gap: 0.1vw;
+`;
+
 const Item = ({ title, image, price }: ItemInterface) => {
   const { cart, setCart, cartMode } = useAppContext();
 
@@ -105,6 +124,13 @@ const Item = ({ title, image, price }: ItemInterface) => {
         <TitleAndDescriptionContainer>
           <TitleContainer>{title}</TitleContainer>
         </TitleAndDescriptionContainer>
+        <OtherInfoContainer>
+          <StarsContainer>
+            {[1, 2, 3, 4, 5].map((el) => {
+              return <FontAwesomeIcon key={el} icon={faStar} />;
+            })}
+          </StarsContainer>
+        </OtherInfoContainer>
       </ItemElement>
     </>
   );
