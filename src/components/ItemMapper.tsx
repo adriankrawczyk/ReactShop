@@ -28,7 +28,6 @@ const ItemMapper = () => {
       .then((json) => {
         setData(json);
         setDisplayData(json);
-        setUniqueCategories([...new Set(data.map(({ category }) => category))]);
       });
   }, []);
 
@@ -36,9 +35,16 @@ const ItemMapper = () => {
     const areAllCategoriesInactive = activeCategoryArray.every(
       (active) => !active
     );
+    setUniqueCategories([...new Set(data.map(({ category }) => category))]);
+    console.log(uniqueCategories);
     setDisplayData(
       data
-        .filter((e) => e.title.toLowerCase().includes(inputValue.toLowerCase()))
+        .filter((e) => {
+          return (
+            e.title.toLowerCase().includes(inputValue.toLowerCase()) ||
+            inputValue.length === 0
+          );
+        })
         .filter((e) => cart.includes(e.title) === cartMode)
         .filter((e) => {
           return areAllCategoriesInactive
