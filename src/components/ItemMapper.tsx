@@ -28,6 +28,7 @@ const ItemMapper = () => {
       .then((json) => {
         setData(json);
         setDisplayData(json);
+        console.log(json);
       });
   }, []);
 
@@ -36,7 +37,6 @@ const ItemMapper = () => {
       (active) => !active
     );
     setUniqueCategories([...new Set(data.map(({ category }) => category))]);
-    console.log(uniqueCategories);
     setDisplayData(
       data
         .filter((e) => {
