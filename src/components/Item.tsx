@@ -99,9 +99,8 @@ const StarsContainer = styled.div`
   gap: 0.1vw;
 `;
 
-const Item = ({ title, image, price }: ItemInterface) => {
+const Item = ({ title, image, price, rating }: ItemInterface) => {
   const { cart, setCart, cartMode } = useAppContext();
-
   return (
     <>
       <ItemElement>
@@ -126,8 +125,14 @@ const Item = ({ title, image, price }: ItemInterface) => {
         </TitleAndDescriptionContainer>
         <OtherInfoContainer>
           <StarsContainer>
-            {[1, 2, 3, 4, 5].map((el) => {
-              return <FontAwesomeIcon key={el} icon={faStar} />;
+            {[...Array(Math.round(rating.rate))].map((el) => {
+              return (
+                <FontAwesomeIcon
+                  style={{ color: "gold" }}
+                  key={el}
+                  icon={faStar}
+                />
+              );
             })}
           </StarsContainer>
         </OtherInfoContainer>

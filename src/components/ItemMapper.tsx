@@ -56,7 +56,7 @@ const ItemMapper = () => {
   return (
     <ItemMapperWrapper>
       {displayData.map((el) => {
-        const { title, description, image, price, category } = el;
+        const { title, description, image, price, category, rating } = el;
         return (
           <Item
             title={title}
@@ -64,6 +64,7 @@ const ItemMapper = () => {
             image={image}
             price={price}
             category={category}
+            rating={rating}
           ></Item>
         );
       })}
