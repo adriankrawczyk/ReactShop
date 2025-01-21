@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useRef, useState } from "react";
 import Item from "./Item";
 import ItemInterface from "../Interfaces/ItemInterface";
@@ -31,14 +32,18 @@ const ItemMapper = () => {
     boughtMode,
     currentOpinionItemTitle,
   } = useAppContext();
-
-  const wrapperRef = useRef<HTMLDivElement>(null); // Proper typing for ref
-
   const [displayData, setDisplayData] = useState<Array<ItemInterface>>([]);
   const [uniqueCategories, setUniqueCategories] = useState<Array<string>>([]);
   const [databaseItemData, setDatabaseItemData] = useState<
     Array<DatabaseItemInterface>
   >([]);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  const scrollToDown = () => {
+    if (wrapperRef.current) {
+      wrapperRef.current.scrollTop = wrapperRef.current.scrollHeight;
+    }
+  };
 
   useEffect(() => {
     (async () => {
@@ -47,8 +52,15 @@ const ItemMapper = () => {
         .then((json) => {
           setData(json);
           setDisplayData(json);
+          console.log(json);
         });
+    })();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
       await getDatabaseItems();
+      if (currentOpinionItemTitle.length > 0) scrollToDown();
     })();
   }, [inputValue]);
 
@@ -66,7 +78,6 @@ const ItemMapper = () => {
     }
     setDatabaseItemData(data);
   };
-
   useEffect(() => {
     const areAllCategoriesInactive = activeCategoryArray.every(
       (active) => !active
@@ -92,22 +103,7 @@ const ItemMapper = () => {
             : activeCategoryArray[uniqueCategories.indexOf(e.category)];
         })
     );
-  }, [
-    inputValue,
-    cart,
-    cartMode,
-    bought,
-    boughtMode,
-    activeCategoryArray,
-    data,
-    uniqueCategories,
-  ]);
-
-  useEffect(() => {
-    if (wrapperRef.current) {
-      wrapperRef.current.scrollTop = wrapperRef.current.scrollHeight;
-    }
-  }, [displayData, databaseItemData]);
+  }, [inputValue, cart, cartMode, bought, boughtMode, activeCategoryArray]);
 
   return (
     <ItemMapperWrapper ref={wrapperRef}>
@@ -153,5 +149,4 @@ const ItemMapper = () => {
     </ItemMapperWrapper>
   );
 };
-
 export default ItemMapper;
