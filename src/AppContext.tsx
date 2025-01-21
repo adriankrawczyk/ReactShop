@@ -13,6 +13,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
   const [bought, setBought] = useState<Array<string>>([]);
   const [cartMode, setCartMode] = useState(false);
   const [boughtMode, setBoughtMode] = useState(false);
+  const [currentOpinionItemTitle, setCurrentOpinionItemTitle] = useState("");
   const [data, setData] = useState<Array<ItemInterface>>([]);
   const [activeCategoryArray, setActiveCategoryArray] = useState<
     Array<boolean>
@@ -31,6 +32,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
         setCartMode,
         boughtMode,
         setBoughtMode,
+        currentOpinionItemTitle,
+        setCurrentOpinionItemTitle,
         data,
         setData,
         activeCategoryArray,

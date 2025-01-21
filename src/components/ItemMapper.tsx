@@ -4,6 +4,9 @@ import Item from "./Item";
 import ItemInterface from "../Interfaces/ItemInterface";
 import styled from "styled-components";
 import { useAppContext } from "../AppContext";
+import DatabaseItemInterface from "../Interfaces/DatabaseItemIterface";
+import OpinionInterface from "../Interfaces/OpinionInterface";
+import Opinion from "./Opinion";
 
 const ItemMapperWrapper = styled.div`
   padding-top: 3.5vh;
@@ -27,27 +30,41 @@ const ItemMapper = () => {
     activeCategoryArray,
     bought,
     boughtMode,
+    currentOpinionItemTitle,
   } = useAppContext();
   const [displayData, setDisplayData] = useState<Array<ItemInterface>>([]);
   const [uniqueCategories, setUniqueCategories] = useState<Array<string>>([]);
-  useEffect(async () => {
-    fetch("https://fakestoreapi.com/products")
-      .then((res) => res.json())
-      .then((json) => {
-        setData(json);
-        setDisplayData(json);
-        console.log(json);
-      });
+  const [databaseItemData, setDatabaseItemData] = useState<
+    Array<DatabaseItemInterface>
+  >([]);
 
+  useEffect(() => {
+    (async () => {
+      fetch("https://fakestoreapi.com/products")
+        .then((res) => res.json())
+        .then((json) => {
+          setData(json);
+          setDisplayData(json);
+          console.log(json);
+        });
+      await getDatabaseItems();
+    })();
+  }, []);
+
+  const getDatabaseItems = async () => {
     const response = await fetch("http://localhost:5000/api/items", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
     });
-    console.log(response);
-  }, []);
-
+    const data: DatabaseItemInterface[] = await response.json();
+    if (!response.ok) {
+      console.log(data);
+      return;
+    }
+    setDatabaseItemData(data);
+  };
   useEffect(() => {
     const areAllCategoriesInactive = activeCategoryArray.every(
       (active) => !active
@@ -77,19 +94,41 @@ const ItemMapper = () => {
 
   return (
     <ItemMapperWrapper>
-      {displayData.map((el) => {
-        const { title, description, image, price, category, rating } = el;
-        return (
-          <Item
-            title={title}
-            description={description}
-            image={image}
-            price={price}
-            category={category}
-            rating={rating}
-          ></Item>
-        );
-      })}
+      {currentOpinionItemTitle.length > 0
+        ? databaseItemData
+            .filter((item) => item.title === currentOpinionItemTitle)
+            .flatMap((item) =>
+              item.opinions.map((opinion, index) => (
+                <Opinion key={`opinion-${index}`} content={opinion.content} />
+              ))
+            )
+        : displayData.map((el, index) => {
+            let quantity = 0;
+            let opinions: Array<OpinionInterface> = [];
+
+            const { title, description, image, price, category, rating } = el;
+            const matchedItem = databaseItemData.find(
+              (item) => item.title === title
+            );
+            if (matchedItem) {
+              quantity = matchedItem.quantity;
+              opinions = matchedItem.opinions;
+            }
+
+            return (
+              <Item
+                key={`item-${index}`}
+                title={title}
+                description={description}
+                image={image}
+                price={price}
+                category={category}
+                rating={rating}
+                quantity={quantity}
+                opinions={opinions}
+              />
+            );
+          })}
     </ItemMapperWrapper>
   );
 };

@@ -11,6 +11,8 @@ interface AppContextType {
   setCartMode: (value: boolean) => void;
   boughtMode: boolean;
   setBoughtMode: (value: boolean) => void;
+  currentOpinionItemTitle: string;
+  setCurrentOpinionItemTitle: (value: string) => void;
   data: Array<ItemInterface>;
   setData: (value: Array<ItemInterface>) => void;
   activeCategoryArray: Array<boolean>;

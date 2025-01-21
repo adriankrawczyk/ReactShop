@@ -171,8 +171,16 @@ const Quantity = styled.div`
   justify-content: center;
 `;
 
-const Item = ({ title, image, price, rating }: ItemInterface) => {
-  const { cart, setCart, cartMode } = useAppContext();
+const Item = ({
+  title,
+  image,
+  price,
+  rating,
+  quantity,
+  opinions,
+}: ItemInterface) => {
+  const { cart, setCart, cartMode, setCurrentOpinionItemTitle } =
+    useAppContext();
   return (
     <>
       <ItemElement>
@@ -198,7 +206,7 @@ const Item = ({ title, image, price, rating }: ItemInterface) => {
         <OtherInfoContainer>
           <QuantityDisplayer>
             <QuantityText>Quantity</QuantityText>
-            <Quantity>0</Quantity>
+            <Quantity>{quantity}</Quantity>
           </QuantityDisplayer>
 
           <StarsContainer>
@@ -212,9 +220,11 @@ const Item = ({ title, image, price, rating }: ItemInterface) => {
               );
             })}
           </StarsContainer>
-          <MessageButton>
+          <MessageButton onClick={() => setCurrentOpinionItemTitle(title)}>
             <FontAwesomeIcon icon={faMessage}></FontAwesomeIcon>
-            <MessageQuantityDisplayer>0</MessageQuantityDisplayer>
+            <MessageQuantityDisplayer>
+              {opinions.length}
+            </MessageQuantityDisplayer>
           </MessageButton>
         </OtherInfoContainer>
       </ItemElement>
