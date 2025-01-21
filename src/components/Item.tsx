@@ -128,6 +128,7 @@ const MessageButton = styled.div`
 `;
 
 const MessageQuantityDisplayer = styled.div`
+  font-weight: 600;
   width: 2vmax;
   height: 2vmax;
   border: 2px solid ${StyleScheme.borderColor};
@@ -140,6 +141,33 @@ const MessageQuantityDisplayer = styled.div`
   top: -1vmax;
   right: -1vmax;
   border-radius: 50%;
+`;
+const QuantityDisplayer = styled.div`
+  position: absolute;
+  width: 6vmax;
+  height: 100%;
+  border-right: 2px solid ${StyleScheme.borderColor};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 1.5vmax;
+`;
+const QuantityText = styled.div`
+  font-weight: 600;
+`;
+const Quantity = styled.div`
+  cursor: default;
+  font-weight: 600;
+  width: 3vmax;
+  height: 3vmax;
+  background-color: white;
+  border: 2px solid ${StyleScheme.borderColor};
+  border-radius: 50%;
+  font-size: 2vmax;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const Item = ({ title, image, price, rating }: ItemInterface) => {
@@ -167,6 +195,11 @@ const Item = ({ title, image, price, rating }: ItemInterface) => {
           <TitleContainer>{title}</TitleContainer>
         </TitleAndDescriptionContainer>
         <OtherInfoContainer>
+          <QuantityDisplayer>
+            <QuantityText>Quantity</QuantityText>
+            <Quantity>0</Quantity>
+          </QuantityDisplayer>
+
           <StarsContainer>
             {[...Array(Math.round(rating.rate))].map((el) => {
               return (
