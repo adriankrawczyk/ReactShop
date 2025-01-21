@@ -30,7 +30,7 @@ const ItemMapper = () => {
   } = useAppContext();
   const [displayData, setDisplayData] = useState<Array<ItemInterface>>([]);
   const [uniqueCategories, setUniqueCategories] = useState<Array<string>>([]);
-  useEffect(() => {
+  useEffect(async () => {
     fetch("https://fakestoreapi.com/products")
       .then((res) => res.json())
       .then((json) => {
@@ -38,6 +38,14 @@ const ItemMapper = () => {
         setDisplayData(json);
         console.log(json);
       });
+
+    const response = await fetch("http://localhost:5000/api/items", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    console.log(response);
   }, []);
 
   useEffect(() => {

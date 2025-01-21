@@ -98,6 +98,7 @@ const Topbar = () => {
   const signOut = () => {
     localStorage.setItem("logged_user", "");
     navigate("/");
+    location.reload();
   };
   return (
     <TopbarContainer>

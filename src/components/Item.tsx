@@ -154,6 +154,7 @@ const QuantityDisplayer = styled.div`
   gap: 1.5vmax;
 `;
 const QuantityText = styled.div`
+  font-size: 1.25vmax;
   font-weight: 600;
 `;
 const Quantity = styled.div`

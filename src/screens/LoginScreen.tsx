@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, FormEvent, useEffect } from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -6,6 +5,7 @@ import {
   faUser,
   faLock,
   faExclamationCircle,
+  faEnvelope,
 } from "@fortawesome/free-solid-svg-icons";
 import { HomeWrapper, MainBox } from "../components/components";
 import {
@@ -27,6 +27,7 @@ interface User {
 interface Errors {
   username?: string;
   password?: string;
+  email?: string;
 }
 
 const ContentContainer = styled.div`
@@ -44,9 +45,22 @@ const ContentDisplayer = styled.div`
   box-shadow: ${StyleScheme.boxShadow};
   border-radius: ${StyleScheme.borderRadius};
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
+`;
+
+const FormContainer = styled.div`
+  display: flex;
   flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  width: 45%;
+`;
+
+const FormTitle = styled.h2`
+  margin-bottom: 10px;
+  font-size: 26px;
+  color: black;
 `;
 
 const InputWrapper = styled.div`
@@ -113,12 +127,21 @@ const Button = styled.button`
   ${WithTransition()}
 `;
 
+const Divider = styled.div`
+  width: 2px;
+  height: 100%;
+  background-color: ${StyleScheme.borderColor};
+`;
+
 const LoginScreen = () => {
-  const [username, setUsername] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const [isLogin, setIsLogin] = useState(true);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
   const [errors, setErrors] = useState<Errors>({});
-  const [apiError, setApiError] = useState<string>("");
+  const [apiError, setApiError] = useState("");
   const navigate = useNavigate();
+
   const validateForm = (): Errors => {
     const errors: Errors = {};
     if (!username.trim()) {
@@ -129,6 +152,9 @@ const LoginScreen = () => {
     } else if (password.length < 6) {
       errors.password = "Password must be at least 6 characters long";
     }
+    if (!isLogin && !email.trim()) {
+      errors.email = "Email is required";
+    }
     return errors;
   };
 
@@ -136,6 +162,7 @@ const LoginScreen = () => {
     e.preventDefault();
     setApiError("");
     setErrors({});
+
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
@@ -143,100 +170,155 @@ const LoginScreen = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/api/users", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      if (isLogin) {
+        const response = await fetch("http://localhost:5000/api/users", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        setApiError(errorData.message || "Failed to fetch users");
-        return;
-      }
+        if (!response.ok) {
+          const errorData = await response.json();
+          setApiError(errorData.message || "Failed to fetch users");
+          return;
+        }
 
-      const users: User[] = await response.json();
-      const user = users.find(
-        (user) => user.username === username && user.password === password
-      );
+        const users: User[] = await response.json();
+        const user = users.find(
+          (user) => user.username === username && user.password === password
+        );
 
-      if (user) {
-        setApiError("");
+        if (user) {
+          localStorage.setItem("logged_user", username);
+          navigate("/shop");
+        } else {
+          setApiError("Invalid username or password");
+        }
+      } else {
+        const response = await fetch("http://localhost:5000/api/users/signup", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username,
+            password,
+            email,
+            isAdmin: false,
+            permissions: ["read"],
+          }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          setApiError(errorData.message || "Failed to create account");
+          return;
+        }
+
         localStorage.setItem("logged_user", username);
         navigate("/shop");
-      } else {
-        setApiError("Invalid username or password");
       }
     } catch (error) {
       console.error("Error during API request:", error);
       setApiError("An error occurred. Please try again later.");
     }
   };
-  const automaticLog = () => {
+
+  useEffect(() => {
     if (localStorage.getItem("logged_user")?.length) {
       navigate("/shop");
     }
-  };
-
-  useEffect(() => {
-    automaticLog();
-  }, []);
+  }, [navigate]);
 
   return (
     <HomeWrapper>
       <MainBox>
         <ContentContainer>
           <ContentDisplayer>
-            <form onSubmit={handleSubmit}>
-              <InputWrapper>
-                <InputContainer>
-                  <IconWrapper>
-                    <FontAwesomeIcon icon={faUser} />
-                  </IconWrapper>
-                  <Input
-                    type="text"
-                    placeholder="Username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    hasError={!!errors.username}
-                  />
-                </InputContainer>
-                {errors.username && (
+            <FormContainer>
+              <FormTitle>Sign Up</FormTitle>
+              <form onSubmit={handleSubmit}>
+                <InputWrapper>
+                  <InputContainer>
+                    <IconWrapper>
+                      <FontAwesomeIcon icon={faUser} />
+                    </IconWrapper>
+                    <Input
+                      type="text"
+                      placeholder="Username"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      hasError={!!errors.username}
+                    />
+                  </InputContainer>
+                  {errors.username && (
+                    <ErrorMessage>
+                      <FontAwesomeIcon icon={faExclamationCircle} />
+                      {errors.username}
+                    </ErrorMessage>
+                  )}
+                </InputWrapper>
+                {!isLogin && (
+                  <InputWrapper>
+                    <InputContainer>
+                      <IconWrapper>
+                        <FontAwesomeIcon icon={faEnvelope} />
+                      </IconWrapper>
+                      <Input
+                        type="email"
+                        placeholder="Email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        hasError={!!errors.email}
+                      />
+                    </InputContainer>
+                    {errors.email && (
+                      <ErrorMessage>
+                        <FontAwesomeIcon icon={faExclamationCircle} />
+                        {errors.email}
+                      </ErrorMessage>
+                    )}
+                  </InputWrapper>
+                )}
+                <InputWrapper>
+                  <InputContainer>
+                    <IconWrapper>
+                      <FontAwesomeIcon icon={faLock} />
+                    </IconWrapper>
+                    <Input
+                      type="password"
+                      placeholder="Password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      hasError={!!errors.password}
+                    />
+                  </InputContainer>
+                  {errors.password && (
+                    <ErrorMessage>
+                      <FontAwesomeIcon icon={faExclamationCircle} />
+                      {errors.password}
+                    </ErrorMessage>
+                  )}
+                </InputWrapper>
+                <Button type="submit">{isLogin ? "Login" : "Sign Up"}</Button>
+                {apiError && (
                   <ErrorMessage>
                     <FontAwesomeIcon icon={faExclamationCircle} />
-                    {errors.username}
+                    {apiError}
                   </ErrorMessage>
                 )}
-              </InputWrapper>
-              <InputWrapper>
-                <InputContainer>
-                  <IconWrapper>
-                    <FontAwesomeIcon icon={faLock} />
-                  </IconWrapper>
-                  <Input
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    hasError={!!errors.password}
-                  />
-                </InputContainer>
-                {errors.password && (
-                  <ErrorMessage>
-                    <FontAwesomeIcon icon={faExclamationCircle} />
-                    {errors.password}
-                  </ErrorMessage>
-                )}
-              </InputWrapper>
-              <Button type="submit">Login</Button>
-              {apiError && (
-                <ErrorMessage>
-                  <FontAwesomeIcon icon={faExclamationCircle} />
-                  {apiError}
-                </ErrorMessage>
-              )}
-            </form>
+              </form>
+            </FormContainer>
+            <Divider />
+            <FormContainer>
+              <FormTitle>
+                {isLogin ? "New Here?" : "Already Have an Account?"}
+              </FormTitle>
+              <Button onClick={() => setIsLogin(!isLogin)}>
+                {isLogin ? "Create Account" : "Go back"}
+              </Button>
+            </FormContainer>
           </ContentDisplayer>
         </ContentContainer>
       </MainBox>

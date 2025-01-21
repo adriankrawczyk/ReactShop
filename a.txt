@@ -1,9 +1,7 @@
--opis
-- ilość
-– pobranie pojedynczego produktu
+- opis
+- ilość (backend)
 – dodannie opinii o produkcie
 – tworzenie uzytkownika
-– akceptacja koszyka
 – Lista zakupów
 • Historia zamówień
 • pobranie całej historii
@@ -11,7 +9,6 @@
 • stworzenie dokumentacji w READ.ME !!!
 
 10pkt
--log out
 • formularz dodawania opinii (e-mail, wiadomość, gwiazdki)
 – walidacja formularza
 – możliwa tylko jedna opinia od użytkownika
@@ -22,5 +19,4 @@
 • działający serwer z bazą danych (wszystkie operację zostają zapisane w bazie
 danych)
 • dokumentacja Postman
-• rejestracja nowych użytkowników
 • logowanie przy użyciu JWT razem z refresh tokenem!
