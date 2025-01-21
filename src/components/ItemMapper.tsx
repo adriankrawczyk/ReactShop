@@ -18,8 +18,16 @@ const ItemMapperWrapper = styled.div`
 `;
 
 const ItemMapper = () => {
-  const { cart, inputValue, cartMode, data, setData, activeCategoryArray } =
-    useAppContext();
+  const {
+    cart,
+    inputValue,
+    cartMode,
+    data,
+    setData,
+    activeCategoryArray,
+    bought,
+    boughtMode,
+  } = useAppContext();
   const [displayData, setDisplayData] = useState<Array<ItemInterface>>([]);
   const [uniqueCategories, setUniqueCategories] = useState<Array<string>>([]);
   useEffect(() => {
@@ -45,14 +53,20 @@ const ItemMapper = () => {
             inputValue.length === 0
           );
         })
-        .filter((e) => cart.includes(e.title) === cartMode)
+        .filter((e) => {
+          if (boughtMode) {
+            return bought.includes(e.title);
+          }
+          return cart.includes(e.title) === cartMode;
+        })
         .filter((e) => {
           return areAllCategoriesInactive
             ? true
             : activeCategoryArray[uniqueCategories.indexOf(e.category)];
         })
     );
-  }, [inputValue, cart, cartMode, activeCategoryArray]);
+  }, [inputValue, cart, cartMode, bought, boughtMode, activeCategoryArray]);
+
   return (
     <ItemMapperWrapper>
       {displayData.map((el) => {

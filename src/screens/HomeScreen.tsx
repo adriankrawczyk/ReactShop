@@ -10,13 +10,13 @@ import SideBar from "../components/SideBar";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { useAppContext } from "../AppContext";
-
+import { ColorScheme } from "../Schemes/StyleScheme";
 const BuyButton = styled.div`
   width: 75px;
   height: 75px;
   border: 1px solid #bbb;
   position: absolute;
-  background-color: rgb(255, 194, 181);
+  background-color: ${ColorScheme.red};
   border-bottom-right-radius: 15%;
   right: 0px;
   bottom: 0;
@@ -27,7 +27,6 @@ const BuyButton = styled.div`
   font-size: 2em;
   cursor: pointer;
 `;
-
 const PriceDisplayer = styled.div`
   width: 12vw;
   height: 75px;
@@ -38,16 +37,15 @@ const PriceDisplayer = styled.div`
   border-bottom: 0;
   border-left: 0;
   position: absolute;
-  background-color: rgb(255, 243, 187);
+  background-color: ${ColorScheme.orange};
   display: flex;
   justify-content: center;
   align-items: center;
   font-weight: 600;
   font-size: 1.5em;
 `;
-
 const HomeScreen = () => {
-  const { cart, data } = useAppContext();
+  const { cart, data, bought, setBought, setCart } = useAppContext();
   const [totalPrice, setTotalPrice] = useState(0);
   useEffect(() => {
     setTotalPrice(0);
@@ -56,22 +54,26 @@ const HomeScreen = () => {
     });
     setTotalPrice((p) => Math.round(p * 100) / 100);
   }, [cart, data]);
-
   return (
     <HomeWrapper>
       <MainBox>
-        <Topbar></Topbar>
-        <SideBar></SideBar>
+        <Topbar></Topbar> <SideBar></SideBar>
         <ContentContainer>
           <PriceDisplayer>{totalPrice}$</PriceDisplayer>
           <ContentDisplayer>
             <ItemMapper></ItemMapper>
           </ContentDisplayer>
-          <BuyButton>Buy</BuyButton>
+          <BuyButton
+            onClick={() => {
+              setBought([...bought, ...cart]);
+              setCart([]);
+            }}
+          >
+            Buy
+          </BuyButton>
         </ContentContainer>
       </MainBox>
     </HomeWrapper>
   );
 };
-
 export default HomeScreen;

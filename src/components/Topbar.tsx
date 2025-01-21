@@ -1,7 +1,11 @@
 import styled from "styled-components";
 import { useAppContext } from "../AppContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCartShopping,
+  faDollarSign,
+} from "@fortawesome/free-solid-svg-icons";
+import { ColorScheme } from "../Schemes/StyleScheme";
 import { WithTransition } from "../Schemes/StyleScheme";
 
 const TopbarContainer = styled.div`
@@ -36,32 +40,72 @@ const CartButton = styled.div<{ $active?: boolean; $empty?: boolean }>`
   height: 50px;
   border: 2px solid #bbb;
   position: absolute;
-  right: 50px;
+  right: 7vw;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: ${({ $empty, $active }) =>
-    $empty ? "white" : $active ? "rgb(187, 255, 187)" : "rgb(255, 243, 187)"};
+    $empty ? "white" : $active ? ColorScheme.green : ColorScheme.orange};
+  ${WithTransition()}
+`;
+
+const HistoryButton = styled.div<{ $active?: boolean; $empty?: boolean }>`
+  cursor: pointer;
+  width: 50px;
+  height: 50px;
+  border: 2px solid #bbb;
+  position: absolute;
+  right: 2vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: ${({ $empty, $active }) =>
+    $empty ? "white" : $active ? ColorScheme.green : ColorScheme.orange};
   ${WithTransition()}
 `;
 
 const Topbar = () => {
-  const { setInputValue, cartMode, setCartMode, cart } = useAppContext();
+  const {
+    setInputValue,
+    cartMode,
+    setCartMode,
+    cart,
+    bought,
+    setBoughtMode,
+    boughtMode,
+  } = useAppContext();
+
   const isCartEmpty = cart.length === 0 && !cartMode;
+  const isHistoryEmpty = bought.length === 0;
+
   return (
     <TopbarContainer>
       <InputContainer>
         <Input onChange={(e) => setInputValue(e.target.value)}></Input>
       </InputContainer>
+
       <CartButton
         $empty={isCartEmpty}
         $active={!isCartEmpty && !cartMode}
         onClick={() => {
-          if (!isCartEmpty) setCartMode(!cartMode);
+          if (!isCartEmpty) {
+            setCartMode(!cartMode);
+          }
         }}
       >
         <FontAwesomeIcon style={{ fontSize: "2em" }} icon={faCartShopping} />
       </CartButton>
+      <HistoryButton
+        $empty={isHistoryEmpty}
+        $active={!isHistoryEmpty && !boughtMode}
+        onClick={() => {
+          if (!isHistoryEmpty) {
+            setBoughtMode(!boughtMode);
+          }
+        }}
+      >
+        <FontAwesomeIcon style={{ fontSize: "2em" }} icon={faDollarSign} />
+      </HistoryButton>
     </TopbarContainer>
   );
 };

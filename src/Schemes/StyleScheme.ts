@@ -1,6 +1,7 @@
 const ColorScheme = {
-  primary: "#f4f7fc",
-  second: "#fff",
+  green: "rgb(187, 255, 187)",
+  orange: "rgb(255, 243, 187)",
+  red: "rgb(255, 194, 181)",
 };
 
 const StyleScheme = {

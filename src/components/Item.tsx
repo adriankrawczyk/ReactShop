@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import ItemInterface from "../Interfaces/ItemInterface";
-import { WithTransition } from "../Schemes/StyleScheme";
+import { ColorScheme, WithTransition } from "../Schemes/StyleScheme";
 import { useAppContext } from "../AppContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faX, faStar } from "@fortawesome/free-solid-svg-icons";
@@ -71,7 +71,7 @@ const AddButton = styled.div<{ $add: boolean }>`
   bottom: 10px;
   border: 2px solid #bbb;
   background-color: ${({ $add }) =>
-    $add ? "rgb(187, 255, 187)" : "rgb(255, 194, 181)"};
+    $add ? ColorScheme.green : ColorScheme.red};
   display: flex;
   justify-content: center;
   align-items: center;

@@ -10,7 +10,9 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const [inputValue, setInputValue] = useState("");
   const [cart, setCart] = useState<Array<string>>([]);
+  const [bought, setBought] = useState<Array<string>>([]);
   const [cartMode, setCartMode] = useState(false);
+  const [boughtMode, setBoughtMode] = useState(false);
   const [data, setData] = useState<Array<ItemInterface>>([]);
   const [activeCategoryArray, setActiveCategoryArray] = useState<
     Array<boolean>
@@ -23,8 +25,12 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
         setInputValue,
         cart,
         setCart,
+        bought,
+        setBought,
         cartMode,
         setCartMode,
+        boughtMode,
+        setBoughtMode,
         data,
         setData,
         activeCategoryArray,

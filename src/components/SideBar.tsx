@@ -2,6 +2,7 @@
 import styled from "styled-components";
 import { useAppContext } from "../AppContext";
 import { useEffect } from "react";
+import { ColorScheme } from "../Schemes/StyleScheme";
 
 const SideBarContainer = styled.div`
   position: absolute;
@@ -22,7 +23,7 @@ const CategoryBar = styled.div<{ $active: boolean }>`
   flex-wrap: wrap;
   text-wrap: nowrap;
   background-color: ${({ $active }) =>
-    $active ? "rgb(187, 255, 187)" : "transparent"};
+    $active ? ColorScheme.green : "transparent"};
   cursor: pointer;
   transition: font-size 0.25s ease-in-out;
   font-size: 1.2vw;
