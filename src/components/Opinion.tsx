@@ -1,7 +1,8 @@
 import styled from "styled-components";
+import OpinionInterface from "../Interfaces/OpinionInterface";
 
 const OpinionElement = styled.div`
-  display: flex;
+  position: relative;
   width: 90%;
   margin-bottom: 3.5vh;
   height: 120px;
@@ -15,11 +16,24 @@ const OpinionElement = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 2vmax;
+`;
+const OpinionContent = styled.div`
+  font-size: 1.75vmax;
 `;
 
-const Opinion = ({ content }: { content: string }) => {
-  return <OpinionElement>{content}</OpinionElement>;
+const Author = styled.div`
+  position: absolute;
+  left: 1vmax;
+  top: 1vmax;
+`;
+
+const Opinion = ({ content, author }: OpinionInterface) => {
+  return (
+    <OpinionElement>
+      <Author>{author}</Author>
+      <OpinionContent>{content}</OpinionContent>
+    </OpinionElement>
+  );
 };
 
 export default Opinion;

@@ -179,7 +179,7 @@ const Item = ({
   quantity,
   opinions,
 }: ItemInterface) => {
-  const { cart, setCart, cartMode, setCurrentOpinionItemTitle } =
+  const { cart, setCart, cartMode, setCurrentOpinionItemTitle, setCartMode } =
     useAppContext();
   return (
     <>
@@ -192,7 +192,10 @@ const Item = ({
               $add={!cartMode}
               onClick={() => {
                 if (!cartMode) setCart([...cart, title]);
-                else setCart(cart.filter((item) => item !== title));
+                else {
+                  if (cart.length === 1) setCartMode(false);
+                  setCart(cart.filter((item) => item !== title));
+                }
               }}
             >
               <FontAwesomeIcon icon={cartMode ? faX : faPlus} />

@@ -94,6 +94,7 @@ const LogoutButton = styled.div`
 
 const Topbar = () => {
   const {
+    inputValue,
     setInputValue,
     cartMode,
     setCartMode,
@@ -102,6 +103,7 @@ const Topbar = () => {
     setBoughtMode,
     boughtMode,
     currentOpinionItemTitle,
+    setCurrentOpinionItemTitle,
   } = useAppContext();
 
   const navigate = useNavigate();
@@ -112,14 +114,44 @@ const Topbar = () => {
     navigate("/");
     location.reload();
   };
+
+  const addNewOpinion = (content: string) => {
+    fetch(
+      `http://localhost:5000/api/items/${currentOpinionItemTitle}/opinion`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          author: localStorage.getItem("logged_user"),
+          content,
+        }),
+      }
+    );
+  };
   return (
     <TopbarContainer>
-      <LogoutButton onClick={signOut}>
+      <LogoutButton
+        onClick={
+          currentOpinionItemTitle.length
+            ? () => setCurrentOpinionItemTitle("")
+            : signOut
+        }
+      >
         <FontAwesomeIcon icon={faSignOut}></FontAwesomeIcon>
       </LogoutButton>
       <InputContainer>
-        <Input onChange={(e) => setInputValue(e.target.value)}></Input>
-        <InputIconContainer>
+        <Input
+          onChange={(e) => setInputValue(e.target.value)}
+          value={inputValue}
+        ></Input>
+        <InputIconContainer
+          onClick={() => {
+            addNewOpinion(inputValue);
+            setInputValue("");
+          }}
+        >
           <FontAwesomeIcon
             icon={currentOpinionItemTitle ? faAdd : faSearch}
           ></FontAwesomeIcon>

@@ -47,9 +47,13 @@ const ItemMapper = () => {
           setDisplayData(json);
           console.log(json);
         });
-      await getDatabaseItems();
     })();
   }, []);
+  useEffect(() => {
+    (async () => {
+      await getDatabaseItems();
+    })();
+  }, [inputValue]);
 
   const getDatabaseItems = async () => {
     const response = await fetch("http://localhost:5000/api/items", {
@@ -99,7 +103,11 @@ const ItemMapper = () => {
             .filter((item) => item.title === currentOpinionItemTitle)
             .flatMap((item) =>
               item.opinions.map((opinion, index) => (
-                <Opinion key={`opinion-${index}`} content={opinion.content} />
+                <Opinion
+                  key={`opinion-${index}`}
+                  author={opinion.author}
+                  content={opinion.content}
+                />
               ))
             )
         : displayData.map((el, index) => {
@@ -114,20 +122,20 @@ const ItemMapper = () => {
               quantity = matchedItem.quantity;
               opinions = matchedItem.opinions;
             }
-
-            return (
-              <Item
-                key={`item-${index}`}
-                title={title}
-                description={description}
-                image={image}
-                price={price}
-                category={category}
-                rating={rating}
-                quantity={quantity}
-                opinions={opinions}
-              />
-            );
+            if (quantity > 0)
+              return (
+                <Item
+                  key={`item-${index}`}
+                  title={title}
+                  description={description}
+                  image={image}
+                  price={price}
+                  category={category}
+                  rating={rating}
+                  quantity={quantity}
+                  opinions={opinions}
+                />
+              );
           })}
     </ItemMapperWrapper>
   );

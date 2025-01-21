@@ -1,7 +1,6 @@
 - opis
 - ilość (backend)
 – dodannie opinii o produkcie
-– tworzenie uzytkownika
 – Lista zakupów
 • Historia zamówień
 • pobranie całej historii
