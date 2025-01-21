@@ -5,6 +5,8 @@ import {
   faCartShopping,
   faDollarSign,
   faSignOut,
+  faSearch,
+  faAdd,
 } from "@fortawesome/free-solid-svg-icons";
 import { ColorScheme } from "../Schemes/StyleScheme";
 import { WithTransition } from "../Schemes/StyleScheme";
@@ -21,6 +23,7 @@ const TopbarContainer = styled.div`
 `;
 
 const InputContainer = styled.div`
+  position: relative;
   width: 50vw;
   height: 10vh;
   margin-left: 10vw;
@@ -34,6 +37,14 @@ const Input = styled.input`
   border-left: 1px solid #bbb;
   border-top: 0;
   border-bottom: 0;
+  font-size: 2vmax;
+  padding-left: 1vmax;
+  outline: none;
+`;
+const InputIconContainer = styled.div`
+  position: absolute;
+  right: 1vmax;
+  font-size: 2vmax;
 `;
 
 const CartButton = styled.div<{ $active?: boolean; $empty?: boolean }>`
@@ -90,6 +101,7 @@ const Topbar = () => {
     bought,
     setBoughtMode,
     boughtMode,
+    currentOpinionItemTitle,
   } = useAppContext();
 
   const navigate = useNavigate();
@@ -107,6 +119,11 @@ const Topbar = () => {
       </LogoutButton>
       <InputContainer>
         <Input onChange={(e) => setInputValue(e.target.value)}></Input>
+        <InputIconContainer>
+          <FontAwesomeIcon
+            icon={currentOpinionItemTitle ? faAdd : faSearch}
+          ></FontAwesomeIcon>
+        </InputIconContainer>
       </InputContainer>
 
       <CartButton
