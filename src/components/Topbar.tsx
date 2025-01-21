@@ -115,20 +115,32 @@ const Topbar = () => {
     location.reload();
   };
 
-  const addNewOpinion = (content: string) => {
-    fetch(
-      `http://localhost:5000/api/items/${currentOpinionItemTitle}/opinion`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          author: localStorage.getItem("logged_user"),
-          content,
-        }),
+  const addNewOpinion = async (content: string) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/items/${currentOpinionItemTitle}/opinion`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            author: localStorage.getItem("logged_user"),
+            content,
+          }),
+        }
+      );
+      if (response.ok) {
+        setInputValue("");
+      } else {
+        console.error(
+          "Failed to add opinion. Server responded with:",
+          response.status
+        );
       }
-    );
+    } catch (error) {
+      console.error("Error adding opinion:", error);
+    }
   };
   return (
     <TopbarContainer>
@@ -149,7 +161,6 @@ const Topbar = () => {
         <InputIconContainer
           onClick={() => {
             addNewOpinion(inputValue);
-            setInputValue("");
           }}
         >
           <FontAwesomeIcon

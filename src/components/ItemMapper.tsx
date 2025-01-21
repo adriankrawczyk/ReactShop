@@ -1,5 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Item from "./Item";
 import ItemInterface from "../Interfaces/ItemInterface";
 import styled from "styled-components";
@@ -32,6 +31,9 @@ const ItemMapper = () => {
     boughtMode,
     currentOpinionItemTitle,
   } = useAppContext();
+
+  const wrapperRef = useRef<HTMLDivElement>(null); // Proper typing for ref
+
   const [displayData, setDisplayData] = useState<Array<ItemInterface>>([]);
   const [uniqueCategories, setUniqueCategories] = useState<Array<string>>([]);
   const [databaseItemData, setDatabaseItemData] = useState<
@@ -45,12 +47,7 @@ const ItemMapper = () => {
         .then((json) => {
           setData(json);
           setDisplayData(json);
-          console.log(json);
         });
-    })();
-  }, []);
-  useEffect(() => {
-    (async () => {
       await getDatabaseItems();
     })();
   }, [inputValue]);
@@ -69,6 +66,7 @@ const ItemMapper = () => {
     }
     setDatabaseItemData(data);
   };
+
   useEffect(() => {
     const areAllCategoriesInactive = activeCategoryArray.every(
       (active) => !active
@@ -94,10 +92,25 @@ const ItemMapper = () => {
             : activeCategoryArray[uniqueCategories.indexOf(e.category)];
         })
     );
-  }, [inputValue, cart, cartMode, bought, boughtMode, activeCategoryArray]);
+  }, [
+    inputValue,
+    cart,
+    cartMode,
+    bought,
+    boughtMode,
+    activeCategoryArray,
+    data,
+    uniqueCategories,
+  ]);
+
+  useEffect(() => {
+    if (wrapperRef.current) {
+      wrapperRef.current.scrollTop = wrapperRef.current.scrollHeight;
+    }
+  }, [displayData, databaseItemData]);
 
   return (
-    <ItemMapperWrapper>
+    <ItemMapperWrapper ref={wrapperRef}>
       {currentOpinionItemTitle.length > 0
         ? databaseItemData
             .filter((item) => item.title === currentOpinionItemTitle)
@@ -140,4 +153,5 @@ const ItemMapper = () => {
     </ItemMapperWrapper>
   );
 };
+
 export default ItemMapper;

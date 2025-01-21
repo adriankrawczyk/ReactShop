@@ -44,6 +44,7 @@ const PriceDisplayer = styled.div`
   font-weight: 600;
   font-size: 1.5em;
 `;
+
 const HomeScreen = () => {
   const { cart, data, bought, setBought, setCart } = useAppContext();
   const [totalPrice, setTotalPrice] = useState(0);
