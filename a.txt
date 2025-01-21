@@ -1,74 +1,26 @@
-import styled from "styled-components";
-import { StyleScheme } from "../Schemes/StyleScheme";
-import Item from "../components/Item";
+-opis
+- ilość
+– pobranie pojedynczego produktu
+– dodannie opinii o produkcie
+– tworzenie uzytkownika
+– akceptacja koszyka
+– Lista zakupów
+• Historia zamówień
+• pobranie całej historii
+• pobranie pojedyńczego zamówienia i wyświetlenie szczegółów
+• stworzenie dokumentacji w READ.ME !!!
 
-const HomeWrapper = styled.div`
-display: flex;
-align-items: center;
-justify-content: center;
-height: 100%;
-width: 100%;
-`;
+10pkt
+-log out
+• formularz dodawania opinii (e-mail, wiadomość, gwiazdki)
+– walidacja formularza
+– możliwa tylko jedna opinia od użytkownika
 
-
-const Topbar = styled.div`
-display: flex;
-align-items: center;
-position: absolute;
-width: 90vw;
-height: 10vh;
-border-bottom: 1px solid #bbb;
-`;
-
-const ContentContainer = styled.div`
-display: flex;
-align-items: center;
-flex-direction: column;
-position: absolute;
-right: 5vw;
-bottom: 3.5vh;
-width: 80vw;
-height: 80vh;
-overflow-y: scroll;
-overflow-x: hidden;
-`;
-
-const SideBar = styled.div`
-position: absolute;
-left: 0;
-bottom: 3.5vh;
-width: 15vw;
-height: 80vh;
-border-right: 1px solid #bbb;
-`;
-
-const SearchBoxContainer = styled.div`
-width: 70vw;
-height: 30px;
-margin-top: 3.5vh;
-`;
-const SearchBox = styled.input`
-width: 70vw;
-height: 30px;
-background-color: white;
-border: 0px;
-`;
-
-const HomeScreen = () => {
-return (
-<HomeWrapper>
-<MainBox>
-<Topbar></Topbar>
-<SideBar></SideBar>
-<ContentContainer>
-<SearchBoxContainer>
-<SearchBox></SearchBox>
-<Item></Item>
-</SearchBoxContainer>
-</ContentContainer>
-</MainBox>
-</HomeWrapper>
-);
-};
-
-export default HomeScreen;
+10.0pkt
+– admin (może usuwać wszystkie opinie)  
+– użytkownik zalogowany (może usuwać / edytować tylko swoje opinie)
+• działający serwer z bazą danych (wszystkie operację zostają zapisane w bazie
+danych)
+• dokumentacja Postman
+• rejestracja nowych użytkowników
+• logowanie przy użyciu JWT razem z refresh tokenem!

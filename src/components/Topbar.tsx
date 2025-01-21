@@ -4,9 +4,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCartShopping,
   faDollarSign,
+  faSignOut,
 } from "@fortawesome/free-solid-svg-icons";
 import { ColorScheme } from "../Schemes/StyleScheme";
 import { WithTransition } from "../Schemes/StyleScheme";
+import { useNavigate } from "react-router-dom";
 
 const TopbarContainer = styled.div`
   display: flex;
@@ -64,6 +66,21 @@ const HistoryButton = styled.div<{ $active?: boolean; $empty?: boolean }>`
   ${WithTransition()}
 `;
 
+const LogoutButton = styled.div`
+  cursor: pointer;
+  width: 50px;
+  height: 50px;
+  border: 2px solid #bbb;
+  position: absolute;
+  left: 2vw;
+  display: flex;
+  align-items: center;
+  font-size: 2vw;
+  justify-content: center;
+  background-color: ${ColorScheme.red};
+  ${WithTransition()};
+`;
+
 const Topbar = () => {
   const {
     setInputValue,
@@ -75,11 +92,18 @@ const Topbar = () => {
     boughtMode,
   } = useAppContext();
 
+  const navigate = useNavigate();
   const isCartEmpty = cart.length === 0 && !cartMode;
   const isHistoryEmpty = bought.length === 0;
-
+  const signOut = () => {
+    localStorage.setItem("logged_user", "");
+    navigate("/");
+  };
   return (
     <TopbarContainer>
+      <LogoutButton onClick={signOut}>
+        <FontAwesomeIcon icon={faSignOut}></FontAwesomeIcon>
+      </LogoutButton>
       <InputContainer>
         <Input onChange={(e) => setInputValue(e.target.value)}></Input>
       </InputContainer>

@@ -1,9 +1,18 @@
 import styled from "styled-components";
 import ItemInterface from "../Interfaces/ItemInterface";
-import { ColorScheme, WithTransition } from "../Schemes/StyleScheme";
+import {
+  ColorScheme,
+  StyleScheme,
+  WithTransition,
+} from "../Schemes/StyleScheme";
 import { useAppContext } from "../AppContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faX, faStar } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPlus,
+  faX,
+  faStar,
+  faMessage,
+} from "@fortawesome/free-solid-svg-icons";
 
 const ItemElement = styled.div`
   display: flex;
@@ -99,6 +108,40 @@ const StarsContainer = styled.div`
   gap: 0.1vw;
 `;
 
+const MessageButton = styled.div`
+  width: 3.5vmax;
+  height: 3.5vmax;
+  background-color: white;
+  border: 2px solid ${StyleScheme.borderColor};
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin-bottom: 1vmax;
+  margin-right: 1vmax;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2vmax;
+  background-color: white;
+  cursor: pointer;
+  ${WithTransition()}
+`;
+
+const MessageQuantityDisplayer = styled.div`
+  width: 2vmax;
+  height: 2vmax;
+  border: 2px solid ${StyleScheme.borderColor};
+  background-color: white;
+  position: absolute;
+  font-size: 1.5vmax;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: -1vmax;
+  right: -1vmax;
+  border-radius: 50%;
+`;
+
 const Item = ({ title, image, price, rating }: ItemInterface) => {
   const { cart, setCart, cartMode } = useAppContext();
   return (
@@ -135,6 +178,10 @@ const Item = ({ title, image, price, rating }: ItemInterface) => {
               );
             })}
           </StarsContainer>
+          <MessageButton>
+            <FontAwesomeIcon icon={faMessage}></FontAwesomeIcon>
+            <MessageQuantityDisplayer>0</MessageQuantityDisplayer>
+          </MessageButton>
         </OtherInfoContainer>
       </ItemElement>
     </>
