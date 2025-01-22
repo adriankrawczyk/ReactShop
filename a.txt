@@ -1,19 +1,12 @@
-- opis
-- ilość
-– Lista zakupów
+• operacje CRUD mogą być zamkockowane w pliku JSON
+• opis
+• ilość
+– pobranie pojedynczego produktu
+– dodannie opinii o produkcie
 • Historia zamówień
-• pobranie całej historii
-• pobranie pojedyńczego zamówienia i wyświetlenie szczegółów
 • stworzenie dokumentacji w READ.ME !!!
-
-10pkt
-• formularz dodawania opinii (e-mail, wiadomość, gwiazdki)
-– walidacja formularza
+formularz dodawania opinii (e-mail, wiadomość, gwiazdki)
 – możliwa tylko jedna opinia od użytkownika
-
-10.0pkt
-– admin (może usuwać wszystkie opinie)  
-– użytkownik zalogowany (może usuwać / edytować tylko swoje opinie)
-wszystkie operację zostają zapisane w bazie danych
+-usuwanie opinii
 • dokumentacja Postman
 • logowanie przy użyciu JWT razem z refresh tokenem!

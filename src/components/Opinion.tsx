@@ -61,7 +61,6 @@ const Opinion = ({ content, author, itemTitle }: OpinionInterface) => {
         },
         body: JSON.stringify({
           author,
-          content,
         }),
       });
 

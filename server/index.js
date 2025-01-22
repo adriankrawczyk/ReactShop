@@ -26,46 +26,51 @@ const connectDB = async () => {
 app.delete("/api/items/:title/opinion", async (req, res) => {
   try {
     const { title } = req.params;
-    const { author, content } = req.body;
-    if (!title || !author || !content) {
+    const decodedTitle = decodeURIComponent(title); // Decode the title
+    const { author } = req.body;
+
+    if (!decodedTitle || !author) {
       return res
         .status(400)
-        .json({ message: "Title, author, and content are required." });
+        .json({ message: "Title and author are required." });
     }
 
-    const item = await db.collection("Items").findOne({ title });
+    const item = await db.collection("Items").findOne({ title: decodedTitle });
 
     if (!item) {
       return res.status(404).json({ message: "Item not found." });
     }
 
-    const opinionExists = item.opinions.some(
-      (opinion) => opinion.author === author && opinion.content === content
+    const userOpinionsExist = item.opinions.some(
+      (opinion) => opinion.author === author
     );
 
-    if (!opinionExists) {
-      return res.status(404).json({ message: "Opinion not found." });
+    if (!userOpinionsExist) {
+      return res
+        .status(404)
+        .json({ message: "No opinions found for this user on the item." });
     }
 
     const result = await db.collection("Items").updateOne(
-      { title: title },
+      { title: decodedTitle },
       {
         $pull: {
           opinions: {
             author: author,
-            content: content,
           },
         },
       }
     );
 
     if (result.modifiedCount === 0) {
-      return res.status(500).json({ message: "Failed to remove opinion." });
+      return res.status(500).json({ message: "Failed to remove opinions." });
     }
 
-    res.status(200).json({ message: "Opinion removed successfully." });
+    res
+      .status(200)
+      .json({ message: "All opinions by the user removed successfully." });
   } catch (error) {
-    console.error("Error removing opinion:", error);
+    console.error("Error removing opinions:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
