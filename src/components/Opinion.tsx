@@ -8,6 +8,7 @@ import {
 } from "../Schemes/StyleScheme";
 import { faX } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { refreshDatabaseItems } from "./ItemMapper";
 
 const OpinionElement = styled.div`
   position: relative;
@@ -50,38 +51,53 @@ const DeleteButton = styled.div`
   cursor: pointer;
   ${WithTransition()}
 `;
-
-const Opinion = ({ content, author, itemTitle }: OpinionInterface) => {
+const Opinion = ({
+  content,
+  author,
+  itemTitle,
+  onDelete,
+}: OpinionInterface & { onDelete: () => void }) => {
   const handleDelete = async () => {
     try {
-      const response = await fetch(`/api/items/${itemTitle}/opinion`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          author,
-        }),
-      });
+      const response = await fetch(
+        `http://localhost:5000/api/items/${itemTitle}/opinion`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            author,
+          }),
+        }
+      );
 
       if (!response.ok) {
         const data = await response.json();
         throw new Error(data.message || "Failed to delete opinion");
+      } else {
+        onDelete();
       }
     } catch (error) {
       console.error("Error deleting opinion:", error);
     }
   };
 
+  const showDelete = () => {
+    const user = localStorage.getItem("logged_user");
+    return localStorage.getItem("isAdmin") || author === user;
+  };
+
   return (
     <OpinionElement>
       <Author>{author}</Author>
       <OpinionContent>{content}</OpinionContent>
-      <DeleteButton onClick={handleDelete}>
-        <FontAwesomeIcon icon={faX} />
-      </DeleteButton>
+      {showDelete() && (
+        <DeleteButton onClick={handleDelete}>
+          <FontAwesomeIcon icon={faX} />
+        </DeleteButton>
+      )}
     </OpinionElement>
   );
 };
-
 export default Opinion;

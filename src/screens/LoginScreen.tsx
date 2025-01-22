@@ -191,6 +191,7 @@ const LoginScreen = () => {
 
         if (user) {
           localStorage.setItem("logged_user", username);
+          localStorage.setItem("isAdmin", user.isAdmin ? "admin" : "");
           navigate("/shop");
         } else {
           setApiError("Invalid username or password");
