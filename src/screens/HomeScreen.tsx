@@ -67,12 +67,17 @@ const HomeScreen = () => {
       for (const item of cart) {
         const { title, quantity } = item;
         if (quantity <= 0) continue;
+
         const response = await fetch("http://localhost:5000/api/items/buy", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ title, quantity }),
+          body: JSON.stringify({
+            title,
+            quantity,
+            username: localStorage.getItem("logged_user"),
+          }),
         });
 
         if (!response.ok) {
@@ -95,10 +100,12 @@ const HomeScreen = () => {
           updatedBought.push({ title, quantity });
         }
       }
+
       setBought(updatedBought);
       setCart([]);
     } catch (error) {
       console.error("Error during purchase:", error);
+      alert(error.message);
     }
   };
   return (

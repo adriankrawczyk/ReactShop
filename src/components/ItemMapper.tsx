@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useRef, useState } from "react";
 import Item from "./Item";
 import ItemInterface from "../Interfaces/ItemInterface";
@@ -27,41 +26,118 @@ const NoOpinionsMessage = styled.div`
   text-align: center;
 `;
 
+const ErrorMessage = styled.div`
+  color: #ff4444;
+  margin: 20px;
+  text-align: center;
+  font-size: 1.1rem;
+`;
+
 const ItemMapper = () => {
   const {
     cart,
+    setCart,
+    bought,
+    setBought,
     inputValue,
     cartMode,
     data,
     setData,
     activeCategoryArray,
-    bought,
     boughtMode,
     currentOpinionItemTitle,
   } = useAppContext();
+
   const [displayData, setDisplayData] = useState<Array<ItemInterface>>([]);
   const [uniqueCategories, setUniqueCategories] = useState<Array<string>>([]);
   const [databaseItemData, setDatabaseItemData] = useState<
     Array<DatabaseItemInterface>
   >([]);
+  const [error, setError] = useState<string>("");
   const wrapperRef = useRef<HTMLDivElement>(null);
-
+  const username = localStorage.getItem("logged_user");
   const scrollToDown = () => {
     if (wrapperRef.current) {
       wrapperRef.current.scrollTop = wrapperRef.current.scrollHeight;
     }
   };
 
+  const fetchCartData = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/users/${username}/cart`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch cart data (${response.status})`);
+      }
+
+      const cartData = await response.json();
+      setCart(cartData);
+    } catch (error) {
+      console.error("Error fetching cart data:", error);
+      setError("Failed to load cart data. Please try refreshing the page.");
+    }
+  };
   useEffect(() => {
-    (async () => {
-      fetch("https://fakestoreapi.com/products")
-        .then((res) => res.json())
-        .then((json) => {
-          setData(json);
-          setDisplayData(json);
-        });
-    })();
-  }, []);
+    const syncCart = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:5000/api/users/${username}/cart`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ cart }),
+          }
+        );
+
+        if (!response.ok) {
+          const data = await response.json();
+          console.error("Failed to sync cart:", data.message);
+        }
+      } catch (error) {
+        console.error("Error syncing cart with database:", error);
+      }
+    };
+    const timeoutId = setTimeout(syncCart, 500);
+    return () => clearTimeout(timeoutId);
+  }, [username, cart]);
+
+  const fetchPurchaseHistory = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/users/${username}/purchases`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          `Failed to fetch purchase history (${response.status})`
+        );
+      }
+
+      const purchaseData = await response.json();
+      setBought(purchaseData);
+    } catch (error) {
+      console.error("Error fetching purchase history:", error);
+      setError(
+        "Failed to load purchase history. Please try refreshing the page."
+      );
+    }
+  };
 
   const refreshData = async () => {
     const newDatabaseItemData = await refreshDatabaseItems();
@@ -71,6 +147,32 @@ const ItemMapper = () => {
   };
 
   useEffect(() => {
+    const initializeData = async () => {
+      setError("");
+      try {
+        const response = await fetch("https://fakestoreapi.com/products");
+        if (!response.ok) {
+          throw new Error("Failed to fetch product data");
+        }
+        const json = await response.json();
+        setData(json);
+        setDisplayData(json);
+      } catch (error) {
+        console.error("Error fetching product data:", error);
+        setError("Failed to load products. Please try refreshing the page.");
+        return;
+      }
+
+      if (username) {
+        await Promise.all([fetchCartData(), fetchPurchaseHistory()]);
+      }
+      await refreshData();
+    };
+
+    initializeData();
+  }, []);
+
+  useEffect(() => {
     refreshData();
 
     if (currentOpinionItemTitle.length > 0) {
@@ -78,6 +180,7 @@ const ItemMapper = () => {
     }
   }, [inputValue, currentOpinionItemTitle]);
 
+  // Filter and update display data
   useEffect(() => {
     const areAllCategoriesInactive = activeCategoryArray.every(
       (active) => !active
@@ -140,6 +243,7 @@ const ItemMapper = () => {
 
   return (
     <ItemMapperWrapper ref={wrapperRef}>
+      {error && <ErrorMessage>{error}</ErrorMessage>}
       {currentOpinionItemTitle.length > 0
         ? renderOpinions()
         : displayData.map((el, index) => {

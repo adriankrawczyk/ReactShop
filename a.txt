@@ -1,5 +1,4 @@
 na teraz:
-formularz dodawania opinii (e-mail, wiadomość, gwiazdki)
 -historia zakupów w bazie, może koszyk też
 -responsywność
 

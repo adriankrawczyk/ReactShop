@@ -160,6 +160,7 @@ const Topbar = () => {
 
   return (
     <TopbarContainer>
+      Hello, {localStorage.getItem("logged_user")}
       <LogoutButton
         onClick={
           currentOpinionItemTitle.length
@@ -203,7 +204,6 @@ const Topbar = () => {
           )}
         </InputIconContainer>
       </InputContainer>
-
       <CartButton
         $empty={isCartEmpty}
         $active={!isCartEmpty && !cartMode}

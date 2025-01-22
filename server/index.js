@@ -23,6 +23,206 @@ const connectDB = async () => {
   }
 };
 
+// User management endpoints
+app.post("/api/users/signup", async (req, res) => {
+  try {
+    const { username, password, email, isAdmin, permissions } = req.body;
+    if (!username || !password || !email) {
+      return res
+        .status(400)
+        .json({ message: "Username, password, and email are required." });
+    }
+    const existingUser = await db.collection("Users").findOne({ username });
+    if (existingUser) {
+      return res
+        .status(400)
+        .json({ message: "A user with this username already exists." });
+    }
+    const newUser = {
+      username,
+      password,
+      email,
+      isAdmin: isAdmin || false,
+      permissions: permissions || ["read"],
+      cart: [],
+      purchases: [],
+    };
+
+    await db.collection("Users").insertOne(newUser);
+    res.status(201).json({ message: "User registered successfully." });
+  } catch (error) {
+    console.error("Error during user registration:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+app.get("/api/users", (req, res) => {
+  fetchCollectionData("Users", res);
+});
+
+// Cart management endpoints
+app.get("/api/users/:username/cart", async (req, res) => {
+  try {
+    const { username } = req.params;
+    const user = await db.collection("Users").findOne({ username });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json(user.cart || []);
+  } catch (error) {
+    console.error("Error fetching cart:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+app.post("/api/users/:username/cart", async (req, res) => {
+  try {
+    const { username } = req.params;
+    const { cart } = req.body;
+
+    if (!Array.isArray(cart)) {
+      return res.status(400).json({ message: "Cart must be an array" });
+    }
+
+    const result = await db
+      .collection("Users")
+      .updateOne({ username }, { $set: { cart } });
+
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({ message: "Cart updated successfully" });
+  } catch (error) {
+    console.error("Error updating cart:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+// Purchase history endpoints
+app.get("/api/users/:username/purchases", async (req, res) => {
+  try {
+    const { username } = req.params;
+    const user = await db.collection("Users").findOne({ username });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json(user.purchases || []);
+  } catch (error) {
+    console.error("Error fetching purchase history:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+// Item management endpoints
+app.get("/api/items", (req, res) => {
+  fetchCollectionData("Items", res);
+});
+
+app.post("/api/items/buy", async (req, res) => {
+  try {
+    const { title, quantity, username } = req.body;
+    if (!title || !quantity || !username) {
+      return res
+        .status(400)
+        .json({ message: "Title, quantity, and username are required." });
+    }
+
+    const dbItem = await db.collection("Items").findOne({ title });
+    if (!dbItem) {
+      return res.status(404).json({ message: `Item "${title}" not found.` });
+    }
+    if (dbItem.quantity < quantity) {
+      return res
+        .status(400)
+        .json({ message: `Not enough stock for item "${title}".` });
+    }
+
+    // Update item quantity
+    await db
+      .collection("Items")
+      .updateOne({ title }, { $inc: { quantity: -quantity } });
+
+    // Add to user's purchase history and clear cart
+    const purchase = {
+      title,
+      quantity,
+      purchaseDate: new Date(),
+      price: dbItem.price,
+    };
+
+    await db.collection("Users").updateOne(
+      { username },
+      {
+        $push: { purchases: purchase },
+        $set: { cart: [] },
+      }
+    );
+
+    res.status(200).json({ message: "Purchase successful" });
+  } catch (error) {
+    console.error("Error during purchase:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+// Opinion management endpoints
+app.post("/api/items/:title/opinion", async (req, res) => {
+  try {
+    const { title } = req.params;
+    const { author, content, rating } = req.body;
+
+    if (!author || !content || rating === undefined) {
+      return res
+        .status(400)
+        .json({ message: "Author, content, and rating are required." });
+    }
+
+    const numRating = Number(rating);
+    if (isNaN(numRating) || numRating < 1 || numRating > 5) {
+      return res
+        .status(400)
+        .json({ message: "Rating must be a number between 1 and 5." });
+    }
+
+    const user = await db.collection("Users").findOne({ username: author });
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    const result = await db.collection("Items").updateOne(
+      { title: title },
+      {
+        $push: {
+          opinions: {
+            author,
+            content,
+            rating: numRating,
+            createdAt: new Date(),
+          },
+        },
+      }
+    );
+
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ message: "Item not found." });
+    }
+
+    if (result.modifiedCount === 0) {
+      return res.status(500).json({ message: "Failed to add opinion." });
+    }
+
+    res.status(201).json({ message: "Opinion added successfully." });
+  } catch (error) {
+    console.error("Error adding opinion:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
 app.delete("/api/items/:title/opinion", async (req, res) => {
   try {
     const { title } = req.params;
@@ -36,7 +236,6 @@ app.delete("/api/items/:title/opinion", async (req, res) => {
     }
 
     const item = await db.collection("Items").findOne({ title: decodedTitle });
-
     if (!item) {
       return res.status(404).json({ message: "Item not found." });
     }
@@ -75,133 +274,6 @@ app.delete("/api/items/:title/opinion", async (req, res) => {
   }
 });
 
-app.post("/api/users/signup", async (req, res) => {
-  try {
-    const { username, password, email, isAdmin, permissions } = req.body;
-    if (!username || !password || !email) {
-      return res
-        .status(400)
-        .json({ message: "Username, password, and email are required." });
-    }
-    const existingUser = await db.collection("Users").findOne({ username });
-    if (existingUser) {
-      return res
-        .status(400)
-        .json({ message: "A user with this username already exists." });
-    }
-    const newUser = {
-      username,
-      password,
-      email,
-      isAdmin: isAdmin || false,
-      permissions: permissions || ["read"],
-    };
-
-    await db.collection("Users").insertOne(newUser);
-
-    res.status(201).json({ message: "User registered successfully." });
-  } catch (error) {
-    console.error("Error during user registration:", error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-});
-
-const fetchCollectionData = async (collectionName, res) => {
-  try {
-    const data = await db.collection(collectionName).find().toArray();
-    res.json(data);
-  } catch (error) {
-    console.error(`Error fetching ${collectionName}:`, error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-};
-
-app.post("/api/items/:title/opinion", async (req, res) => {
-  try {
-    const { title } = req.params;
-    const { author, content, rating } = req.body;
-
-    if (!author || !content || rating === undefined) {
-      return res
-        .status(400)
-        .json({ message: "Author, content, and rating are required." });
-    }
-
-    // Validate rating
-    const numRating = Number(rating);
-    if (isNaN(numRating) || numRating < 1 || numRating > 5) {
-      return res
-        .status(400)
-        .json({ message: "Rating must be a number between 1 and 5." });
-    }
-
-    const user = await db.collection("Users").findOne({ username: author });
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found." });
-    }
-
-    const result = await db.collection("Items").updateOne(
-      { title: title },
-      {
-        $push: {
-          opinions: {
-            author,
-            content,
-            rating: numRating,
-            createdAt: new Date(),
-          },
-        },
-      }
-    );
-
-    if (result.matchedCount === 0) {
-      return res.status(404).json({ message: "Item not found." });
-    }
-
-    if (result.modifiedCount === 0) {
-      return res.status(500).json({ message: "Failed to add opinion." });
-    }
-
-    res.status(201).json({ message: "Opinion added successfully." });
-  } catch (error) {
-    console.error("Error adding opinion:", error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-});
-
-app.post("/api/items/buy", async (req, res) => {
-  try {
-    const { title, quantity } = req.body;
-    if (!title || !quantity) {
-      return res
-        .status(400)
-        .json({ message: "Title and quantity are required." });
-    }
-    const dbItem = await db.collection("Items").findOne({ title });
-    if (!dbItem) {
-      return res.status(404).json({ message: `Item "${title}" not found.` });
-    }
-    if (dbItem.quantity < quantity) {
-      return res
-        .status(400)
-        .json({ message: `Not enough stock for item "${title}".` });
-    }
-    await db.collection("Items").updateOne(
-      { title },
-      {
-        $inc: { quantity: -quantity },
-      }
-    );
-
-    res.status(200).json({ message: "Purchase successful." });
-  } catch (error) {
-    console.error("Error during purchase:", error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-});
-
-// Add an endpoint to get average rating for an item
 app.get("/api/items/:title/rating", async (req, res) => {
   try {
     const { title } = req.params;
@@ -231,14 +303,18 @@ app.get("/api/items/:title/rating", async (req, res) => {
   }
 });
 
-app.get("/api/users", (req, res) => {
-  fetchCollectionData("Users", res);
-});
+// Helper function
+const fetchCollectionData = async (collectionName, res) => {
+  try {
+    const data = await db.collection(collectionName).find().toArray();
+    res.json(data);
+  } catch (error) {
+    console.error(`Error fetching ${collectionName}:`, error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
 
-app.get("/api/items", (req, res) => {
-  fetchCollectionData("Items", res);
-});
-
+// Server startup and shutdown
 connectDB().then(() => {
   app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
