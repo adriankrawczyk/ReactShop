@@ -174,6 +174,37 @@ app.post("/api/items/:title/opinion", async (req, res) => {
   }
 });
 
+app.post("/api/items/buy", async (req, res) => {
+  try {
+    const { title, quantity } = req.body;
+    if (!title || !quantity) {
+      return res
+        .status(400)
+        .json({ message: "Title and quantity are required." });
+    }
+    const dbItem = await db.collection("Items").findOne({ title });
+    if (!dbItem) {
+      return res.status(404).json({ message: `Item "${title}" not found.` });
+    }
+    if (dbItem.quantity < quantity) {
+      return res
+        .status(400)
+        .json({ message: `Not enough stock for item "${title}".` });
+    }
+    await db.collection("Items").updateOne(
+      { title },
+      {
+        $inc: { quantity: -quantity },
+      }
+    );
+
+    res.status(200).json({ message: "Purchase successful." });
+  } catch (error) {
+    console.error("Error during purchase:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
 app.get("/api/users", (req, res) => {
   fetchCollectionData("Users", res);
 });

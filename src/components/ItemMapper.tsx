@@ -72,6 +72,7 @@ const ItemMapper = () => {
   }, [inputValue, currentOpinionItemTitle]);
 
   useEffect(() => {
+    refreshData();
     const areAllCategoriesInactive = activeCategoryArray.every(
       (active) => !active
     );
@@ -86,7 +87,8 @@ const ItemMapper = () => {
         })
         .filter((e) => {
           if (boughtMode) {
-            return bought.includes(e.title);
+            console.log(bought);
+            return bought.some((item) => item.title === e.title);
           }
           return !cartMode || cart.some((c) => c.title === e.title);
         })

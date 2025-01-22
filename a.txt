@@ -1,5 +1,4 @@
 na teraz:
-• ilość
 • Historia zamówień
 formularz dodawania opinii (e-mail, wiadomość, gwiazdki)
 -responsywność

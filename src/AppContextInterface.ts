@@ -5,8 +5,8 @@ interface AppContextType {
   setInputValue: (value: string) => void;
   cart: Array<ItemInterface>;
   setCart: (value: Array<ItemInterface>) => void;
-  bought: Array<string>;
-  setBought: (value: Array<string>) => void;
+  bought: Array<ItemInterface>;
+  setBought: (value: Array<ItemInterface>) => void;
   cartMode: boolean;
   setCartMode: (value: boolean) => void;
   boughtMode: boolean;

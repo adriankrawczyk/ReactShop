@@ -194,14 +194,26 @@ const Item = ({
   opinions,
   description,
 }: ItemInterface & { baseQuantity: number }) => {
-  const { cart, setCart, cartMode, setCurrentOpinionItemTitle, setCartMode } =
-    useAppContext();
+  const {
+    cart,
+    setCart,
+    cartMode,
+    setCurrentOpinionItemTitle,
+    setCartMode,
+    bought,
+    boughtMode,
+  } = useAppContext();
 
   const getQuantity = () => {
-    const cartItem = cart.find((item) => item.title === title);
-    return cartMode
-      ? cartItem?.quantity || 0
-      : baseQuantity - (cartItem?.quantity || 0);
+    if (boughtMode) {
+      const boughtItem = bought.find((item) => item.title === title);
+      return boughtItem?.quantity || 0;
+    } else {
+      const cartItem = cart.find((item) => item.title === title);
+      return cartMode
+        ? cartItem?.quantity || 0
+        : baseQuantity - (cartItem?.quantity || 0);
+    }
   };
 
   const handleAddToCart = () => {
@@ -222,20 +234,24 @@ const Item = ({
         item.title === title ? { ...item, quantity: item.quantity - 1 } : item
       );
       setCart(updatedCart);
-      if (updatedCart.every((c) => c.quantity == 0)) {
+      if (updatedCart.every((c) => c.quantity === 0)) {
         setCartMode(false);
       }
     }
   };
+
+  if (getQuantity() === 0) return <></>;
 
   return (
     <ItemElement>
       <ImageContainer>
         <ItemInfo>
           <Price>{price}$</Price>
-          <AddButton $add={!cartMode} onClick={handleAddToCart}>
-            <FontAwesomeIcon icon={cartMode ? faX : faPlus} />
-          </AddButton>
+          {!boughtMode && (
+            <AddButton $add={!cartMode} onClick={handleAddToCart}>
+              <FontAwesomeIcon icon={cartMode ? faX : faPlus} />
+            </AddButton>
+          )}
         </ItemInfo>
         <Image src={image}></Image>
       </ImageContainer>
