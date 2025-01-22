@@ -1,6 +1,5 @@
 - opis
-- ilość (backend)
-– dodannie opinii o produkcie
+- ilość
 – Lista zakupów
 • Historia zamówień
 • pobranie całej historii
@@ -15,7 +14,6 @@
 10.0pkt
 – admin (może usuwać wszystkie opinie)  
 – użytkownik zalogowany (może usuwać / edytować tylko swoje opinie)
-• działający serwer z bazą danych (wszystkie operację zostają zapisane w bazie
-danych)
+wszystkie operację zostają zapisane w bazie danych
 • dokumentacja Postman
 • logowanie przy użyciu JWT razem z refresh tokenem!

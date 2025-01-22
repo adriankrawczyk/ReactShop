@@ -134,7 +134,7 @@ const MessageQuantityDisplayer = styled.div`
   border: 2px solid ${StyleScheme.borderColor};
   background-color: white;
   position: absolute;
-  font-size: 1.5vmax;
+  font-size: 1.25vmax;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -165,7 +165,7 @@ const Quantity = styled.div`
   background-color: white;
   border: 2px solid ${StyleScheme.borderColor};
   border-radius: 50%;
-  font-size: 2vmax;
+  font-size: 1.75vmax;
   display: flex;
   align-items: center;
   justify-content: center;

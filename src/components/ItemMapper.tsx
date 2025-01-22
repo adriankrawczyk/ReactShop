@@ -116,6 +116,7 @@ const ItemMapper = () => {
                   key={`opinion-${index}`}
                   author={opinion.author}
                   content={opinion.content}
+                  itemTitle={item.title}
                 />
               ))
             )

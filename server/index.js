@@ -12,7 +12,6 @@ app.use(express.json());
 const client = new MongoClient(process.env.ATLAS_URI);
 let db;
 
-// Connect to MongoDB once when starting the server
 const connectDB = async () => {
   try {
     await client.connect();
@@ -23,26 +22,68 @@ const connectDB = async () => {
     process.exit(1);
   }
 };
+
+app.delete("/api/items/:title/opinion", async (req, res) => {
+  try {
+    const { title } = req.params;
+    const { author, content } = req.body;
+    if (!title || !author || !content) {
+      return res
+        .status(400)
+        .json({ message: "Title, author, and content are required." });
+    }
+
+    const item = await db.collection("Items").findOne({ title });
+
+    if (!item) {
+      return res.status(404).json({ message: "Item not found." });
+    }
+
+    const opinionExists = item.opinions.some(
+      (opinion) => opinion.author === author && opinion.content === content
+    );
+
+    if (!opinionExists) {
+      return res.status(404).json({ message: "Opinion not found." });
+    }
+
+    const result = await db.collection("Items").updateOne(
+      { title: title },
+      {
+        $pull: {
+          opinions: {
+            author: author,
+            content: content,
+          },
+        },
+      }
+    );
+
+    if (result.modifiedCount === 0) {
+      return res.status(500).json({ message: "Failed to remove opinion." });
+    }
+
+    res.status(200).json({ message: "Opinion removed successfully." });
+  } catch (error) {
+    console.error("Error removing opinion:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
 app.post("/api/users/signup", async (req, res) => {
   try {
     const { username, password, email, isAdmin, permissions } = req.body;
-
-    // Validate required fields
     if (!username || !password || !email) {
       return res
         .status(400)
         .json({ message: "Username, password, and email are required." });
     }
-
-    // Check if the user already exists
     const existingUser = await db.collection("Users").findOne({ username });
     if (existingUser) {
       return res
         .status(400)
         .json({ message: "A user with this username already exists." });
     }
-
-    // Insert new user
     const newUser = {
       username,
       password,
@@ -60,7 +101,6 @@ app.post("/api/users/signup", async (req, res) => {
   }
 });
 
-// Modified fetchCollectionData function
 const fetchCollectionData = async (collectionName, res) => {
   try {
     const data = await db.collection(collectionName).find().toArray();
@@ -71,21 +111,18 @@ const fetchCollectionData = async (collectionName, res) => {
   }
 };
 
-// Add opinion to an item by title
 app.post("/api/items/:title/opinion", async (req, res) => {
   try {
     console.log(req.body);
     const { title } = req.params;
     const { author, content } = req.body;
 
-    // Validate required fields
     if (!author || !content) {
       return res
         .status(400)
         .json({ message: "Both 'author' and 'content' are required." });
     }
 
-    // Check if user exists
     const user = await db.collection("Users").findOne({ username: author });
 
     if (!user) {
@@ -104,7 +141,6 @@ app.post("/api/items/:title/opinion", async (req, res) => {
     //     .json({ message: "User has already commented on this item." });
     // }
 
-    // Add the opinion
     const result = await db.collection("Items").updateOne(
       { title: title },
       {
@@ -133,7 +169,6 @@ app.post("/api/items/:title/opinion", async (req, res) => {
   }
 });
 
-// Update existing routes to use the db variable
 app.get("/api/users", (req, res) => {
   fetchCollectionData("Users", res);
 });
@@ -142,14 +177,12 @@ app.get("/api/items", (req, res) => {
   fetchCollectionData("Items", res);
 });
 
-// Connect to MongoDB and start the server
 connectDB().then(() => {
   app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
   });
 });
 
-// Handle process termination
 process.on("SIGINT", async () => {
   try {
     await client.close();
