@@ -218,9 +218,11 @@ const Item = ({
         setCart(updatedCart);
       }
     } else {
-      const updatedCart = cart.filter((item) => item.title !== title);
+      const updatedCart = cart.map((item) =>
+        item.title === title ? { ...item, quantity: item.quantity - 1 } : item
+      );
       setCart(updatedCart);
-      if (updatedCart.length === 0) {
+      if (updatedCart.every((c) => c.quantity == 0)) {
         setCartMode(false);
       }
     }
