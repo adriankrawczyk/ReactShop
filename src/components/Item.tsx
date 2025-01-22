@@ -185,69 +185,82 @@ const Quantity = styled.div`
   align-items: center;
   justify-content: center;
 `;
-
 const Item = ({
   title,
   image,
   price,
   rating,
-  quantity,
+  baseQuantity,
   opinions,
   description,
-}: ItemInterface) => {
+}: ItemInterface & { baseQuantity: number }) => {
   const { cart, setCart, cartMode, setCurrentOpinionItemTitle, setCartMode } =
     useAppContext();
-  return (
-    <>
-      <ItemElement>
-        <ImageContainer>
-          <ItemInfo>
-            <Price>{price}$</Price>
 
-            <AddButton
-              $add={!cartMode}
-              onClick={() => {
-                if (!cartMode) setCart([...cart, title]);
-                else {
-                  if (cart.length === 1) setCartMode(false);
-                  setCart(cart.filter((item) => item !== title));
-                }
-              }}
-            >
-              <FontAwesomeIcon icon={cartMode ? faX : faPlus} />
-            </AddButton>
-          </ItemInfo>
-          <Image src={image}></Image>
-        </ImageContainer>
-        <TitleAndDescriptionContainer>
-          <TitleContainer>{title}</TitleContainer>
-        </TitleAndDescriptionContainer>
-        <OtherInfoContainer>
-          <QuantityDisplayer>
-            <QuantityText>Quantity</QuantityText>
-            <Quantity>{quantity}</Quantity>
-          </QuantityDisplayer>
-          <Description>{description}</Description>
-          <StarsContainer>
-            {[...Array(Math.round(rating.rate))].map((el) => {
-              return (
-                <FontAwesomeIcon
-                  style={{ color: "gold" }}
-                  key={el}
-                  icon={faStar}
-                />
-              );
-            })}
-          </StarsContainer>
-          <MessageButton onClick={() => setCurrentOpinionItemTitle(title)}>
-            <FontAwesomeIcon icon={faMessage}></FontAwesomeIcon>
-            <MessageQuantityDisplayer>
-              {opinions.length}
-            </MessageQuantityDisplayer>
-          </MessageButton>
-        </OtherInfoContainer>
-      </ItemElement>
-    </>
+  const getQuantity = () => {
+    const cartItem = cart.find((item) => item.title === title);
+    return cartMode
+      ? cartItem?.quantity || 0
+      : baseQuantity - (cartItem?.quantity || 0);
+  };
+
+  const handleAddToCart = () => {
+    if (getQuantity() <= 0) return;
+    if (!cartMode) {
+      const existingItem = cart.find((item) => item.title === title);
+
+      if (!existingItem) {
+        setCart([...cart, { title, quantity: 1 }]);
+      } else {
+        const updatedCart = cart.map((item) =>
+          item.title === title ? { ...item, quantity: item.quantity + 1 } : item
+        );
+        setCart(updatedCart);
+      }
+    } else {
+      const updatedCart = cart.filter((item) => item.title !== title);
+      setCart(updatedCart);
+      if (updatedCart.length === 0) {
+        setCartMode(false);
+      }
+    }
+  };
+
+  return (
+    <ItemElement>
+      <ImageContainer>
+        <ItemInfo>
+          <Price>{price}$</Price>
+          <AddButton $add={!cartMode} onClick={handleAddToCart}>
+            <FontAwesomeIcon icon={cartMode ? faX : faPlus} />
+          </AddButton>
+        </ItemInfo>
+        <Image src={image}></Image>
+      </ImageContainer>
+      <TitleAndDescriptionContainer>
+        <TitleContainer>{title}</TitleContainer>
+      </TitleAndDescriptionContainer>
+      <OtherInfoContainer>
+        <QuantityDisplayer>
+          <QuantityText>Quantity</QuantityText>
+          <Quantity>{getQuantity()}</Quantity>
+        </QuantityDisplayer>
+        <Description>{description}</Description>
+        <StarsContainer>
+          {[...Array(Math.round(rating.rate))].map((el, index) => (
+            <FontAwesomeIcon
+              style={{ color: "gold" }}
+              key={index}
+              icon={faStar}
+            />
+          ))}
+        </StarsContainer>
+        <MessageButton onClick={() => setCurrentOpinionItemTitle(title)}>
+          <FontAwesomeIcon icon={faMessage}></FontAwesomeIcon>
+          <MessageQuantityDisplayer>{opinions.length}</MessageQuantityDisplayer>
+        </MessageButton>
+      </OtherInfoContainer>
+    </ItemElement>
   );
 };
 

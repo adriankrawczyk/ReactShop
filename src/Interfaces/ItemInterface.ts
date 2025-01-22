@@ -3,12 +3,12 @@ import RatingInterface from "./RatingInterface";
 
 interface ItemInterface {
   title: string;
-  description: string;
-  image: string;
-  price: string;
-  category: string;
-  rating: RatingInterface;
+  description?: string;
+  image?: string;
+  price?: string;
+  category?: string;
+  rating?: RatingInterface;
   quantity: number;
-  opinions: Array<OpinionInterface>;
+  opinions?: Array<OpinionInterface>;
 }
 export default ItemInterface;

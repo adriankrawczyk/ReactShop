@@ -9,7 +9,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [inputValue, setInputValue] = useState("");
-  const [cart, setCart] = useState<Array<string>>([]);
+  const [cart, setCart] = useState<Array<ItemInterface>>([]);
   const [bought, setBought] = useState<Array<string>>([]);
   const [cartMode, setCartMode] = useState(false);
   const [boughtMode, setBoughtMode] = useState(false);

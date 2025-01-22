@@ -52,16 +52,17 @@ const ItemMapper = () => {
         .then((json) => {
           setData(json);
           setDisplayData(json);
-          console.log(json);
         });
     })();
   }, []);
+
   const refreshData = async () => {
     const newDatabaseItemData = await refreshDatabaseItems();
     if (newDatabaseItemData) {
       setDatabaseItemData(newDatabaseItemData);
     }
   };
+
   useEffect(() => {
     refreshData();
 
@@ -87,7 +88,7 @@ const ItemMapper = () => {
           if (boughtMode) {
             return bought.includes(e.title);
           }
-          return cart.includes(e.title) === cartMode;
+          return !cartMode || cart.some((c) => c.title === e.title);
         })
         .filter((e) => {
           return areAllCategoriesInactive
@@ -122,17 +123,14 @@ const ItemMapper = () => {
               ))
             )
         : displayData.map((el, index) => {
-            let quantity = 0;
-            let opinions: Array<OpinionInterface> = [];
             const { title, description, image, price, category, rating } = el;
             const matchedItem = databaseItemData.find(
               (item) => item.title === title
             );
-            if (matchedItem) {
-              quantity = matchedItem.quantity;
-              opinions = matchedItem.opinions;
-            }
-            if (quantity > 0)
+            const baseQuantity = matchedItem?.quantity || 0;
+            const opinions = matchedItem?.opinions || [];
+
+            if (baseQuantity > 0) {
               return (
                 <Item
                   key={`item-${index}`}
@@ -142,10 +140,11 @@ const ItemMapper = () => {
                   price={price}
                   category={category}
                   rating={rating}
-                  quantity={quantity}
+                  baseQuantity={baseQuantity}
                   opinions={opinions}
                 />
               );
+            }
           })}
     </ItemMapperWrapper>
   );

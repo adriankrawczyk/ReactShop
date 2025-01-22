@@ -51,7 +51,10 @@ const HomeScreen = () => {
   useEffect(() => {
     setTotalPrice(0);
     data.forEach((e) => {
-      if (cart.includes(e.title)) setTotalPrice((p) => p + parseFloat(e.price));
+      const cartItem = cart.find((item) => item.title === e.title);
+      if (cartItem) {
+        setTotalPrice((p) => p + parseFloat(e.price) * cartItem.quantity);
+      }
     });
     setTotalPrice((p) => Math.round(p * 100) / 100);
   }, [cart, data]);
@@ -66,7 +69,7 @@ const HomeScreen = () => {
           </ContentDisplayer>
           <BuyButton
             onClick={() => {
-              setBought([...bought, ...cart]);
+              // setBought([...bought, ...cart]);
               setCart([]);
             }}
           >
