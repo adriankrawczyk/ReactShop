@@ -72,7 +72,6 @@ const ItemMapper = () => {
   }, [inputValue, currentOpinionItemTitle]);
 
   useEffect(() => {
-    refreshData();
     const areAllCategoriesInactive = activeCategoryArray.every(
       (active) => !active
     );

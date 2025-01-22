@@ -74,13 +74,29 @@ const HomeScreen = () => {
           },
           body: JSON.stringify({ title, quantity }),
         });
+
         if (!response.ok) {
           const errorData = await response.json();
           throw new Error(errorData.message || "Failed to complete purchase.");
         }
-        setBought([...bought, ...cart]);
-        setCart([]);
       }
+
+      const updatedBought = [...bought];
+      for (const item of cart) {
+        const { title, quantity } = item;
+
+        const existingItemIndex = updatedBought.findIndex(
+          (boughtItem) => boughtItem.title === title
+        );
+
+        if (existingItemIndex !== -1) {
+          updatedBought[existingItemIndex].quantity += quantity;
+        } else {
+          updatedBought.push({ title, quantity });
+        }
+      }
+      setBought(updatedBought);
+      setCart([]);
     } catch (error) {
       console.error("Error during purchase:", error);
     }
