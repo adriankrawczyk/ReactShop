@@ -1,5 +1,4 @@
 na teraz:
--historia zakupów w bazie, może koszyk też
 -responsywność
 
 

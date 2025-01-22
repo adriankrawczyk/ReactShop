@@ -2,6 +2,7 @@ import React, { createContext, useState, ReactNode } from "react";
 import AppContextType from "./AppContextInterface";
 import { useContext } from "react";
 import ItemInterface from "./Interfaces/ItemInterface";
+import OpinionInterface from "./Interfaces/OpinionInterface";
 
 export const AppContext = createContext<AppContextType | null>(null);
 
@@ -12,6 +13,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
   const [cart, setCart] = useState<Array<ItemInterface>>([]);
   const [bought, setBought] = useState<Array<ItemInterface>>([]);
   const [cartMode, setCartMode] = useState(false);
+  const [opinionArray, setOpinionArray] = useState<Array<OpinionInterface>>([]);
   const [boughtMode, setBoughtMode] = useState(false);
   const [currentOpinionItemTitle, setCurrentOpinionItemTitle] = useState("");
   const [data, setData] = useState<Array<ItemInterface>>([]);
@@ -38,6 +40,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
         setData,
         activeCategoryArray,
         setActiveCategoryArray,
+        opinionArray,
+        setOpinionArray,
       }}
     >
       {children}

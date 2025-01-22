@@ -11,6 +11,7 @@ import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { useAppContext } from "../AppContext";
 import { ColorScheme } from "../Schemes/StyleScheme";
+
 const BuyButton = styled.div`
   width: 75px;
   height: 75px;

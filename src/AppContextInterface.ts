@@ -1,4 +1,5 @@
 import ItemInterface from "./Interfaces/ItemInterface";
+import OpinionInterface from "./Interfaces/OpinionInterface";
 
 interface AppContextType {
   inputValue: string;
@@ -17,6 +18,8 @@ interface AppContextType {
   setData: (value: Array<ItemInterface>) => void;
   activeCategoryArray: Array<boolean>;
   setActiveCategoryArray: (value: Array<boolean>) => void;
+  opinionArray: Array<OpinionInterface>;
+  setOpinionArray: (value: Array<OpinionInterface>) => void;
 }
 
 export default AppContextType;

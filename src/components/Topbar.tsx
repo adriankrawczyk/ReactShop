@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppContext } from "../AppContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -105,12 +105,20 @@ const Topbar = () => {
     boughtMode,
     currentOpinionItemTitle,
     setCurrentOpinionItemTitle,
+    setOpinionArray,
+    opinionArray,
   } = useAppContext();
 
   const navigate = useNavigate();
   const isCartEmpty = cart.length === 0 && !cartMode;
   const isHistoryEmpty = bought.length === 0;
   const [rating, setRating] = useState(0);
+  useEffect(() => {
+    fetch(`http://localhost:5000/api/items/${currentOpinionItemTitle}/opinions`)
+      .then((response) => response.json())
+      .then((opinions) => setOpinionArray(opinions))
+      .catch((error) => console.error("Error:", error));
+  }, [inputValue, currentOpinionItemTitle, opinionArray]);
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (
@@ -170,40 +178,46 @@ const Topbar = () => {
       >
         <FontAwesomeIcon icon={faSignOut}></FontAwesomeIcon>
       </LogoutButton>
-      <InputContainer>
-        <Input
-          onChange={(e) => setInputValue(e.target.value)}
-          value={inputValue}
-          onKeyPress={handleKeyPress}
-        />
-        <InputIconContainer
-          onClick={() => {
-            if (currentOpinionItemTitle && inputValue && rating > 0) {
-              addNewOpinion(inputValue);
-            }
-          }}
-        >
-          {currentOpinionItemTitle ? (
-            [...Array(5)].map((el, index) => (
-              <FontAwesomeIcon
-                key={index}
-                icon={faStar}
-                style={{
-                  color: index < rating ? "gold" : "gray",
-                  cursor: "pointer",
-                  marginLeft: "5px",
-                }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setRating(index + 1);
-                }}
-              />
-            ))
-          ) : (
-            <FontAwesomeIcon icon={faSearch} />
-          )}
-        </InputIconContainer>
-      </InputContainer>
+      {opinionArray.find(
+        (e) => e.author === localStorage.getItem("logged_user")
+      ) ? (
+        <></>
+      ) : (
+        <InputContainer>
+          <Input
+            onChange={(e) => setInputValue(e.target.value)}
+            value={inputValue}
+            onKeyPress={handleKeyPress}
+          />
+          <InputIconContainer
+            onClick={() => {
+              if (currentOpinionItemTitle && inputValue && rating > 0) {
+                addNewOpinion(inputValue);
+              }
+            }}
+          >
+            {currentOpinionItemTitle ? (
+              [...Array(5)].map((el, index) => (
+                <FontAwesomeIcon
+                  key={index}
+                  icon={faStar}
+                  style={{
+                    color: index < rating ? "gold" : "gray",
+                    cursor: "pointer",
+                    marginLeft: "5px",
+                  }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setRating(index + 1);
+                  }}
+                />
+              ))
+            ) : (
+              <FontAwesomeIcon icon={faSearch} />
+            )}
+          </InputIconContainer>
+        </InputContainer>
+      )}
       <CartButton
         $empty={isCartEmpty}
         $active={!isCartEmpty && !cartMode}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import OpinionInterface from "../Interfaces/OpinionInterface";
 import {
@@ -9,6 +9,7 @@ import {
 import { faX, faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { refreshDatabaseItems } from "./ItemMapper";
+import { useAppContext } from "../AppContext";
 
 const OpinionElement = styled.div`
   position: relative;
@@ -64,6 +65,7 @@ const Opinion = ({
   itemTitle,
   onDelete,
 }: OpinionInterface & { onDelete: () => void }) => {
+  const { setOpinionArray, opinionArray } = useAppContext();
   const handleDelete = async () => {
     try {
       const response = await fetch(
@@ -83,6 +85,11 @@ const Opinion = ({
         const data = await response.json();
         throw new Error(data.message || "Failed to delete opinion");
       } else {
+        setOpinionArray(
+          opinionArray.filter((el) => {
+            return el.author !== author;
+          })
+        );
         onDelete();
       }
     } catch (error) {

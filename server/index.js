@@ -303,6 +303,27 @@ app.get("/api/items/:title/rating", async (req, res) => {
   }
 });
 
+// Get opinions for a specific item
+app.get("/api/items/:title/opinions", async (req, res) => {
+  try {
+    const { title } = req.params;
+    const item = await db.collection("Items").findOne({ title });
+
+    if (!item) {
+      return res.status(404).json({ message: "Item not found." });
+    }
+
+    if (!item.opinions || item.opinions.length === 0) {
+      return res.json([]);
+    }
+
+    res.json(item.opinions);
+  } catch (error) {
+    console.error("Error fetching opinions:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
 // Helper function
 const fetchCollectionData = async (collectionName, res) => {
   try {
