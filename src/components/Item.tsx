@@ -54,6 +54,21 @@ const TitleAndDescriptionContainer = styled.div`
   align-items: center;
 `;
 
+const Description = styled.div`
+  font-size: 0.7vmax;
+  padding: 0.25vmax;
+  top: 0%;
+  left: 6vmax;
+  width: 50%;
+  height: 20vh;
+  position: absolute;
+  overflow: hidden;
+  display: none;
+  @media (min-width: 768px) {
+    display: block;
+  }
+`;
+
 const Image = styled.img`
   width: 120px;
   border-left: 2px solid #bbb;
@@ -178,6 +193,7 @@ const Item = ({
   rating,
   quantity,
   opinions,
+  description,
 }: ItemInterface) => {
   const { cart, setCart, cartMode, setCurrentOpinionItemTitle, setCartMode } =
     useAppContext();
@@ -211,7 +227,7 @@ const Item = ({
             <QuantityText>Quantity</QuantityText>
             <Quantity>{quantity}</Quantity>
           </QuantityDisplayer>
-
+          <Description>{description}</Description>
           <StarsContainer>
             {[...Array(Math.round(rating.rate))].map((el) => {
               return (

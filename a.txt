@@ -1,12 +1,14 @@
-• operacje CRUD mogą być zamkockowane w pliku JSON
+na teraz:
 • opis
 • ilość
-– pobranie pojedynczego produktu
-– dodannie opinii o produkcie
 • Historia zamówień
-• stworzenie dokumentacji w READ.ME !!!
 formularz dodawania opinii (e-mail, wiadomość, gwiazdki)
-– możliwa tylko jedna opinia od użytkownika
--usuwanie opinii
+-responsywność
+
+
+na później
+• operacje CRUD mogą być zamkockowane w pliku JSON
+• stworzenie dokumentacji w READ.ME !!!
 • dokumentacja Postman
 • logowanie przy użyciu JWT razem z refresh tokenem!
+– możliwa tylko jedna opinia od użytkownika
