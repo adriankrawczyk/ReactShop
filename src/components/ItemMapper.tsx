@@ -4,9 +4,9 @@ import Item from "./Item";
 import ItemInterface from "../Interfaces/ItemInterface";
 import styled from "styled-components";
 import { useAppContext } from "../AppContext";
-import DatabaseItemInterface from "../Interfaces/DatabaseItemInterface.ts";
-import OpinionInterface from "../Interfaces/OpinionInterface.ts";
-import Opinion from "./Opinion.tsx";
+import DatabaseItemInterface from "../Interfaces/DatabaseItemInterface";
+import OpinionInterface from "../Interfaces/OpinionInterface";
+import Opinion from "./Opinion";
 
 const ItemMapperWrapper = styled.div`
   padding-top: 3.5vh;
@@ -18,6 +18,13 @@ const ItemMapperWrapper = styled.div`
   align-items: center;
   overflow-y: scroll;
   overflow-x: hidden;
+`;
+
+const NoOpinionsMessage = styled.div`
+  font-size: 1.2rem;
+  color: #666;
+  margin-top: 20px;
+  text-align: center;
 `;
 
 const ItemMapper = () => {
@@ -86,7 +93,6 @@ const ItemMapper = () => {
         })
         .filter((e) => {
           if (boughtMode) {
-            console.log(bought);
             return bought.some((item) => item.title === e.title);
           }
           return !cartMode || cart.some((c) => c.title === e.title);
@@ -107,22 +113,35 @@ const ItemMapper = () => {
     data,
   ]);
 
+  const renderOpinions = () => {
+    const currentItem = databaseItemData.find(
+      (item) => item.title === currentOpinionItemTitle
+    );
+
+    if (!currentItem || !currentItem.opinions.length) {
+      return (
+        <NoOpinionsMessage>
+          No opinions yet. Be the first to share your thoughts!
+        </NoOpinionsMessage>
+      );
+    }
+
+    return currentItem.opinions.map((opinion, index) => (
+      <Opinion
+        key={`opinion-${index}`}
+        author={opinion.author}
+        content={opinion.content}
+        rating={opinion.rating}
+        itemTitle={currentItem.title}
+        onDelete={refreshData}
+      />
+    ));
+  };
+
   return (
     <ItemMapperWrapper ref={wrapperRef}>
       {currentOpinionItemTitle.length > 0
-        ? databaseItemData
-            .filter((item) => item.title === currentOpinionItemTitle)
-            .flatMap((item) =>
-              item.opinions.map((opinion, index) => (
-                <Opinion
-                  key={`opinion-${index}`}
-                  author={opinion.author}
-                  content={opinion.content}
-                  itemTitle={item.title}
-                  onDelete={refreshData}
-                />
-              ))
-            )
+        ? renderOpinions()
         : displayData.map((el, index) => {
             const { title, description, image, price, category, rating } = el;
             const matchedItem = databaseItemData.find(
@@ -146,24 +165,31 @@ const ItemMapper = () => {
                 />
               );
             }
+            return null;
           })}
     </ItemMapperWrapper>
   );
 };
 
 export const refreshDatabaseItems = async () => {
-  const response = await fetch("http://localhost:5000/api/items", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  const data: DatabaseItemInterface[] = await response.json();
-  if (!response.ok) {
-    console.log(data);
-    return;
+  try {
+    const response = await fetch("http://localhost:5000/api/items", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data: DatabaseItemInterface[] = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching database items:", error);
+    return [];
   }
-  return data;
 };
 
 export default ItemMapper;

@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { useState } from "react";
 import { useAppContext } from "../AppContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -6,7 +7,7 @@ import {
   faDollarSign,
   faSignOut,
   faSearch,
-  faAdd,
+  faStar,
 } from "@fortawesome/free-solid-svg-icons";
 import { ColorScheme } from "../Schemes/StyleScheme";
 import { WithTransition } from "../Schemes/StyleScheme";
@@ -109,12 +110,24 @@ const Topbar = () => {
   const navigate = useNavigate();
   const isCartEmpty = cart.length === 0 && !cartMode;
   const isHistoryEmpty = bought.length === 0;
+  const [rating, setRating] = useState(0);
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (
+      e.key === "Enter" &&
+      currentOpinionItemTitle &&
+      inputValue &&
+      rating > 0
+    ) {
+      addNewOpinion(inputValue);
+    }
+  };
+
   const signOut = () => {
     localStorage.setItem("logged_user", "");
     navigate("/");
     location.reload();
   };
-
   const addNewOpinion = async (content: string) => {
     try {
       const response = await fetch(
@@ -127,11 +140,13 @@ const Topbar = () => {
           body: JSON.stringify({
             author: localStorage.getItem("logged_user"),
             content,
+            rating,
           }),
         }
       );
       if (response.ok) {
         setInputValue("");
+        setRating(0); // Reset rating after successful submission
       } else {
         console.error(
           "Failed to add opinion. Server responded with:",
@@ -142,6 +157,7 @@ const Topbar = () => {
       console.error("Error adding opinion:", error);
     }
   };
+
   return (
     <TopbarContainer>
       <LogoutButton
@@ -157,15 +173,34 @@ const Topbar = () => {
         <Input
           onChange={(e) => setInputValue(e.target.value)}
           value={inputValue}
-        ></Input>
+          onKeyPress={handleKeyPress}
+        />
         <InputIconContainer
           onClick={() => {
-            addNewOpinion(inputValue);
+            if (currentOpinionItemTitle && inputValue && rating > 0) {
+              addNewOpinion(inputValue);
+            }
           }}
         >
-          <FontAwesomeIcon
-            icon={currentOpinionItemTitle ? faAdd : faSearch}
-          ></FontAwesomeIcon>
+          {currentOpinionItemTitle ? (
+            [...Array(5)].map((el, index) => (
+              <FontAwesomeIcon
+                key={index}
+                icon={faStar}
+                style={{
+                  color: index < rating ? "gold" : "gray",
+                  cursor: "pointer",
+                  marginLeft: "5px",
+                }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setRating(index + 1);
+                }}
+              />
+            ))
+          ) : (
+            <FontAwesomeIcon icon={faSearch} />
+          )}
         </InputIconContainer>
       </InputContainer>
 

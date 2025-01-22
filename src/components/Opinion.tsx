@@ -6,7 +6,7 @@ import {
   StyleScheme,
   WithTransition,
 } from "../Schemes/StyleScheme";
-import { faX } from "@fortawesome/free-solid-svg-icons";
+import { faX, faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { refreshDatabaseItems } from "./ItemMapper";
 
@@ -51,9 +51,16 @@ const DeleteButton = styled.div`
   cursor: pointer;
   ${WithTransition()}
 `;
+
+const StarContainer = styled.div`
+  position: absolute;
+  right: 0.5vmax;
+  bottom: 0.5vmax;
+`;
 const Opinion = ({
   content,
   author,
+  rating,
   itemTitle,
   onDelete,
 }: OpinionInterface & { onDelete: () => void }) => {
@@ -92,6 +99,17 @@ const Opinion = ({
     <OpinionElement>
       <Author>{author}</Author>
       <OpinionContent>{content}</OpinionContent>
+      <StarContainer>
+        {[...Array(5)].map((_, index) => (
+          <FontAwesomeIcon
+            key={index}
+            icon={faStar}
+            style={{
+              color: index < rating ? "gold" : "gray",
+            }}
+          />
+        ))}
+      </StarContainer>
       {showDelete() && (
         <DeleteButton onClick={handleDelete}>
           <FontAwesomeIcon icon={faX} />
