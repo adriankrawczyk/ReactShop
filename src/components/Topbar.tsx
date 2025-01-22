@@ -175,6 +175,7 @@ const Topbar = () => {
         onClick={() => {
           if (!isCartEmpty) {
             setCartMode(!cartMode);
+            if (boughtMode) setBoughtMode(false);
           }
         }}
       >
@@ -186,6 +187,7 @@ const Topbar = () => {
         onClick={() => {
           if (!isHistoryEmpty) {
             setBoughtMode(!boughtMode);
+            if (cartMode) setCartMode(false);
           }
         }}
       >
