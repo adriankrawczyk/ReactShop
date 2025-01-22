@@ -23,6 +23,42 @@ const connectDB = async () => {
     process.exit(1);
   }
 };
+app.post("/api/users/signup", async (req, res) => {
+  try {
+    const { username, password, email, isAdmin, permissions } = req.body;
+
+    // Validate required fields
+    if (!username || !password || !email) {
+      return res
+        .status(400)
+        .json({ message: "Username, password, and email are required." });
+    }
+
+    // Check if the user already exists
+    const existingUser = await db.collection("Users").findOne({ username });
+    if (existingUser) {
+      return res
+        .status(400)
+        .json({ message: "A user with this username already exists." });
+    }
+
+    // Insert new user
+    const newUser = {
+      username,
+      password,
+      email,
+      isAdmin: isAdmin || false,
+      permissions: permissions || ["read"],
+    };
+
+    await db.collection("Users").insertOne(newUser);
+
+    res.status(201).json({ message: "User registered successfully." });
+  } catch (error) {
+    console.error("Error during user registration:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
 
 // Modified fetchCollectionData function
 const fetchCollectionData = async (collectionName, res) => {
