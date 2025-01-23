@@ -116,8 +116,11 @@ const Topbar = () => {
   useEffect(() => {
     fetch(`http://localhost:5000/api/items/${currentOpinionItemTitle}/opinions`)
       .then((response) => response.json())
-      .then((opinions) => setOpinionArray(opinions))
+      .then((opinions) => {
+        setOpinionArray(opinions);
+      })
       .catch((error) => console.error("Error:", error));
+    if (currentOpinionItemTitle === "") setOpinionArray([]);
   }, [inputValue, currentOpinionItemTitle, opinionArray]);
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -154,7 +157,7 @@ const Topbar = () => {
       );
       if (response.ok) {
         setInputValue("");
-        setRating(0); // Reset rating after successful submission
+        setRating(0);
       } else {
         console.error(
           "Failed to add opinion. Server responded with:",
