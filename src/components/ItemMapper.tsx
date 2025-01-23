@@ -234,7 +234,9 @@ const ItemMapper = () => {
         .filter((e) => {
           return areAllCategoriesInactive
             ? true
-            : activeCategoryArray[uniqueCategories.indexOf(e.category)];
+            : activeCategoryArray[
+                uniqueCategories.indexOf(e.category ? e.category : "")
+              ];
         })
     );
   }, [
@@ -245,7 +247,6 @@ const ItemMapper = () => {
     boughtMode,
     activeCategoryArray,
     data,
-    uniqueCategories,
   ]);
 
   const renderOpinions = () => {
@@ -298,6 +299,7 @@ const ItemMapper = () => {
                   rating={rating}
                   baseQuantity={baseQuantity}
                   opinions={opinions}
+                  quantity={0}
                 />
               );
             }

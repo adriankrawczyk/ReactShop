@@ -153,7 +153,7 @@ const Topbar = () => {
       setHasUserSubmittedOpinion(userHasSubmitted);
     } else {
       setHasUserSubmittedOpinion(false);
-      setOpinionArray([]);
+      if (opinionArray.length) setOpinionArray([]);
     }
   }, [opinionArray, currentOpinionItemTitle, setOpinionArray]);
 
