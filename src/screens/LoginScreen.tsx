@@ -171,32 +171,26 @@ const LoginScreen = () => {
 
     try {
       if (isLogin) {
-        const response = await fetch("http://localhost:5000/api/users", {
-          method: "GET",
+        const response = await fetch("http://localhost:5000/api/users/login", {
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
+          body: JSON.stringify({ username, password }),
         });
 
         if (!response.ok) {
           const errorData = await response.json();
-          setApiError(errorData.message || "Failed to fetch users");
+          setApiError(errorData.message || "Invalid username or password");
           return;
         }
 
-        const users: User[] = await response.json();
-        const user = users.find(
-          (user) => user.username === username && user.password === password
-        );
-
-        if (user) {
-          localStorage.setItem("logged_user", username);
-          localStorage.setItem("isAdmin", user.isAdmin ? "admin" : "");
-          navigate("/shop");
-        } else {
-          setApiError("Invalid username or password");
-        }
+        const { token } = await response.json();
+        localStorage.setItem("token", token); // Store JWT token
+        localStorage.setItem("logged_user", username);
+        navigate("/shop");
       } else {
+        // Signup request
         const response = await fetch("http://localhost:5000/api/users/signup", {
           method: "POST",
           headers: {
@@ -217,6 +211,8 @@ const LoginScreen = () => {
           return;
         }
 
+        const { token } = await response.json();
+        localStorage.setItem("token", token); // Store JWT token
         localStorage.setItem("logged_user", username);
         navigate("/shop");
       }
@@ -238,7 +234,7 @@ const LoginScreen = () => {
         <ContentContainer>
           <ContentDisplayer>
             <FormContainer>
-              <FormTitle>Sign Up</FormTitle>
+              <FormTitle>{isLogin ? "Login" : "Sign Up"}</FormTitle>
               <form onSubmit={handleSubmit}>
                 <InputWrapper>
                   <InputContainer>

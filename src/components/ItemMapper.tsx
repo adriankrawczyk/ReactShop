@@ -70,6 +70,7 @@ const ItemMapper = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
@@ -90,10 +91,12 @@ const ItemMapper = () => {
       try {
         const response = await fetch(
           `http://localhost:5000/api/users/${username}/cart`,
+
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
             body: JSON.stringify({ cart }),
           }
@@ -119,6 +122,7 @@ const ItemMapper = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
@@ -281,6 +285,7 @@ export const refreshDatabaseItems = async () => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
 

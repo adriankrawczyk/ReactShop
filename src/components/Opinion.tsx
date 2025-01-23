@@ -58,6 +58,7 @@ const StarContainer = styled.div`
   right: 0.5vmax;
   bottom: 0.5vmax;
 `;
+
 const Opinion = ({
   content,
   author,
@@ -66,32 +67,36 @@ const Opinion = ({
   onDelete,
 }: OpinionInterface & { onDelete: () => void }) => {
   const { setOpinionArray, opinionArray } = useAppContext();
+
   const handleDelete = async () => {
     try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("No token found. Please log in.");
+      }
+
       const response = await fetch(
-        `http://localhost:5000/api/items/${itemTitle}/opinion`,
+        `http://localhost:5000/api/items/${encodeURIComponent(
+          itemTitle
+        )}/opinion`,
         {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({
-            author,
-          }),
+          body: JSON.stringify({ author }),
         }
       );
 
       if (!response.ok) {
         const data = await response.json();
         throw new Error(data.message || "Failed to delete opinion");
-      } else {
-        setOpinionArray(
-          opinionArray.filter((el) => {
-            return el.author !== author;
-          })
-        );
-        onDelete();
       }
+
+      // Update local state to reflect the deletion
+      setOpinionArray(opinionArray.filter((el) => el.author !== author));
+      onDelete(); // Call the onDelete callback if provided
     } catch (error) {
       console.error("Error deleting opinion:", error);
     }
@@ -99,7 +104,8 @@ const Opinion = ({
 
   const showDelete = () => {
     const user = localStorage.getItem("logged_user");
-    return localStorage.getItem("isAdmin") || author === user;
+    const isAdmin = localStorage.getItem("isAdmin") === "true"; // Assuming isAdmin is stored as a string "true" or "false"
+    return isAdmin || author === user;
   };
 
   return (
@@ -125,4 +131,5 @@ const Opinion = ({
     </OpinionElement>
   );
 };
+
 export default Opinion;

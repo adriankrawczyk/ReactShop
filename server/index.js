@@ -2,6 +2,8 @@ const express = require("express");
 const { MongoClient } = require("mongodb");
 require("dotenv").config({ path: "./config.env" });
 const cors = require("cors");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -23,6 +25,31 @@ const connectDB = async () => {
   }
 };
 
+// JWT Secret Key
+const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
+
+// Generate JWT Token
+const generateToken = (userId) => {
+  return jwt.sign({ userId }, JWT_SECRET, { expiresIn: "1h" });
+};
+
+// Verify JWT Token Middleware
+const authMiddleware = (req, res, next) => {
+  const token = req.header("Authorization")?.replace("Bearer ", "");
+  if (!token) {
+    return res
+      .status(401)
+      .json({ message: "Access denied. No token provided." });
+  }
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    req.userId = decoded.userId;
+    next();
+  } catch (error) {
+    res.status(400).json({ message: "Invalid token." });
+  }
+};
+
 // User management endpoints
 app.post("/api/users/signup", async (req, res) => {
   try {
@@ -38,9 +65,13 @@ app.post("/api/users/signup", async (req, res) => {
         .status(400)
         .json({ message: "A user with this username already exists." });
     }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const newUser = {
       username,
-      password,
+      password: hashedPassword,
       email,
       isAdmin: isAdmin || false,
       permissions: permissions || ["read"],
@@ -56,12 +87,52 @@ app.post("/api/users/signup", async (req, res) => {
   }
 });
 
-app.get("/api/users", (req, res) => {
-  fetchCollectionData("Users", res);
+// Login endpoint
+app.post("/api/users/login", async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    if (!username || !password) {
+      return res
+        .status(400)
+        .json({ message: "Username and password are required." });
+    }
+    const user = await db.collection("Users").findOne({ username });
+
+    if (!user) {
+      return res.status(400).json({ message: "Invalid credentials." });
+    }
+    console.log(bcrypt.hashSync(user.password));
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(400).json({ message: "Invalid credentials." });
+    }
+
+    // Generate JWT token
+    const token = generateToken(user._id);
+    res.json({ token });
+  } catch (error) {
+    console.error("Error during login:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+// Protected route example
+app.get("/api/protected", authMiddleware, async (req, res) => {
+  try {
+    const user = await db.collection("Users").findOne({ _id: req.userId });
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+    res.json({ message: "This is a protected route.", user });
+  } catch (error) {
+    console.error("Error fetching protected data:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
 });
 
 // Cart management endpoints
-app.get("/api/users/:username/cart", async (req, res) => {
+app.get("/api/users/:username/cart", authMiddleware, async (req, res) => {
   try {
     const { username } = req.params;
     const user = await db.collection("Users").findOne({ username });
@@ -77,7 +148,7 @@ app.get("/api/users/:username/cart", async (req, res) => {
   }
 });
 
-app.post("/api/users/:username/cart", async (req, res) => {
+app.post("/api/users/:username/cart", authMiddleware, async (req, res) => {
   try {
     const { username } = req.params;
     const { cart } = req.body;
@@ -102,7 +173,7 @@ app.post("/api/users/:username/cart", async (req, res) => {
 });
 
 // Purchase history endpoints
-app.get("/api/users/:username/purchases", async (req, res) => {
+app.get("/api/users/:username/purchases", authMiddleware, async (req, res) => {
   try {
     const { username } = req.params;
     const user = await db.collection("Users").findOne({ username });
@@ -123,7 +194,7 @@ app.get("/api/items", (req, res) => {
   fetchCollectionData("Items", res);
 });
 
-app.post("/api/items/buy", async (req, res) => {
+app.post("/api/items/buy", authMiddleware, async (req, res) => {
   try {
     const { title, quantity, username } = req.body;
     if (!title || !quantity || !username) {
@@ -171,7 +242,45 @@ app.post("/api/items/buy", async (req, res) => {
 });
 
 // Opinion management endpoints
-app.post("/api/items/:title/opinion", async (req, res) => {
+app.delete("/api/items/:title/opinion", authMiddleware, async (req, res) => {
+  try {
+    const { title } = req.params;
+    const { author } = req.body;
+
+    if (!title || !author) {
+      return res
+        .status(400)
+        .json({ message: "Title and author are required." });
+    }
+
+    const item = await db.collection("Items").findOne({ title });
+    if (!item) {
+      return res.status(404).json({ message: "Item not found." });
+    }
+
+    const result = await db.collection("Items").updateOne(
+      { title },
+      {
+        $pull: {
+          opinions: { author },
+        },
+      }
+    );
+
+    if (result.modifiedCount === 0) {
+      return res
+        .status(404)
+        .json({ message: "No opinions found for this user." });
+    }
+
+    res.status(200).json({ message: "Opinion deleted successfully." });
+  } catch (error) {
+    console.error("Error deleting opinion:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+app.post("/api/items/:title/opinion", authMiddleware, async (req, res) => {
   try {
     const { title } = req.params;
     const { author, content, rating } = req.body;
@@ -195,7 +304,7 @@ app.post("/api/items/:title/opinion", async (req, res) => {
     }
 
     const result = await db.collection("Items").updateOne(
-      { title: title },
+      { title },
       {
         $push: {
           opinions: {
@@ -222,108 +331,6 @@ app.post("/api/items/:title/opinion", async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
-
-app.delete("/api/items/:title/opinion", async (req, res) => {
-  try {
-    const { title } = req.params;
-    const decodedTitle = decodeURIComponent(title);
-    const { author } = req.body;
-
-    if (!decodedTitle || !author) {
-      return res
-        .status(400)
-        .json({ message: "Title and author are required." });
-    }
-
-    const item = await db.collection("Items").findOne({ title: decodedTitle });
-    if (!item) {
-      return res.status(404).json({ message: "Item not found." });
-    }
-
-    const userOpinionsExist = item.opinions.some(
-      (opinion) => opinion.author === author
-    );
-
-    if (!userOpinionsExist) {
-      return res
-        .status(404)
-        .json({ message: "No opinions found for this user on the item." });
-    }
-
-    const result = await db.collection("Items").updateOne(
-      { title: decodedTitle },
-      {
-        $pull: {
-          opinions: {
-            author: author,
-          },
-        },
-      }
-    );
-
-    if (result.modifiedCount === 0) {
-      return res.status(500).json({ message: "Failed to remove opinions." });
-    }
-
-    res
-      .status(200)
-      .json({ message: "All opinions by the user removed successfully." });
-  } catch (error) {
-    console.error("Error removing opinions:", error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-});
-
-app.get("/api/items/:title/rating", async (req, res) => {
-  try {
-    const { title } = req.params;
-    const item = await db.collection("Items").findOne({ title });
-
-    if (!item) {
-      return res.status(404).json({ message: "Item not found." });
-    }
-
-    if (!item.opinions || item.opinions.length === 0) {
-      return res.json({ averageRating: 0, totalOpinions: 0 });
-    }
-
-    const totalRating = item.opinions.reduce(
-      (sum, opinion) => sum + opinion.rating,
-      0
-    );
-    const averageRating = totalRating / item.opinions.length;
-
-    res.json({
-      averageRating: Number(averageRating.toFixed(1)),
-      totalOpinions: item.opinions.length,
-    });
-  } catch (error) {
-    console.error("Error getting average rating:", error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-});
-
-// Get opinions for a specific item
-app.get("/api/items/:title/opinions", async (req, res) => {
-  try {
-    const { title } = req.params;
-    const item = await db.collection("Items").findOne({ title });
-
-    if (!item) {
-      return res.status(404).json({ message: "Item not found." });
-    }
-
-    if (!item.opinions || item.opinions.length === 0) {
-      return res.json([]);
-    }
-
-    res.json(item.opinions);
-  } catch (error) {
-    console.error("Error fetching opinions:", error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-});
-
 // Helper function
 const fetchCollectionData = async (collectionName, res) => {
   try {

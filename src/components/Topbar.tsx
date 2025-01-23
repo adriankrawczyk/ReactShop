@@ -119,6 +119,7 @@ const InputIconContainer = styled.div`
   right: 1vmax;
   font-size: 2vmax;
 `;
+
 const Topbar = () => {
   const {
     inputValue,
@@ -141,6 +142,19 @@ const Topbar = () => {
   const isCartEmpty = cart.length === 0 && !cartMode;
   const isHistoryEmpty = bought.length === 0;
   const [rating, setRating] = useState(0);
+  const [hasUserSubmittedOpinion, setHasUserSubmittedOpinion] = useState(false);
+
+  useEffect(() => {
+    if (currentOpinionItemTitle) {
+      const userHasSubmitted = opinionArray.some(
+        (opinion) => opinion.author === localStorage.getItem("logged_user")
+      );
+      setHasUserSubmittedOpinion(userHasSubmitted);
+      console.log(userHasSubmitted);
+    } else {
+      setHasUserSubmittedOpinion(false);
+    }
+  }, [opinionArray, currentOpinionItemTitle]);
 
   useEffect(() => {
     if (currentOpinionItemTitle) {
@@ -177,34 +191,49 @@ const Topbar = () => {
 
   const addNewOpinion = async (content: string) => {
     try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("No token found. Please log in.");
+      }
+
+      const newOpinion = {
+        author: localStorage.getItem("logged_user"),
+        content,
+        rating,
+      };
+
       const response = await fetch(
-        `http://localhost:5000/api/items/${currentOpinionItemTitle}/opinion`,
+        `http://localhost:5000/api/items/${encodeURIComponent(
+          currentOpinionItemTitle
+        )}/opinion`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({
-            author: localStorage.getItem("logged_user"),
-            content,
-            rating,
-          }),
+          body: JSON.stringify(newOpinion),
         }
       );
-      if (response.ok) {
-        setInputValue("");
-        setRating(0);
-      } else {
-        console.error(
-          "Failed to add opinion. Server responded with:",
-          response.status
-        );
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || "Failed to add opinion");
       }
+
+      // Update opinionArray locally immediately
+      setOpinionArray([...opinionArray, newOpinion]);
+
+      // Update hasUserSubmittedOpinion to true
+      setHasUserSubmittedOpinion(true);
+
+      // Clear input and rating after successful submission
+      setInputValue("");
+      setRating(0);
     } catch (error) {
       console.error("Error adding opinion:", error);
     }
   };
-
   return (
     <TopbarContainer>
       Hello, {localStorage.getItem("logged_user")}
@@ -222,11 +251,7 @@ const Topbar = () => {
       >
         <FontAwesomeIcon icon={faSignOut}></FontAwesomeIcon>
       </LogoutButton>
-      {opinionArray.find(
-        (e) => e.author === localStorage.getItem("logged_user")
-      ) && !isLoading ? (
-        <></>
-      ) : (
+      {!hasUserSubmittedOpinion && !isLoading && currentOpinionItemTitle && (
         <InputContainer>
           {isLoading ? (
             <SpinnerContainer>
