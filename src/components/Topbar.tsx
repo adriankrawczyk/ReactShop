@@ -212,6 +212,11 @@ const Topbar = () => {
         onClick={
           currentOpinionItemTitle.length
             ? () => setCurrentOpinionItemTitle("")
+            : cartMode || boughtMode
+            ? () => {
+                setCartMode(false);
+                setBoughtMode(false);
+              }
             : signOut
         }
       >
