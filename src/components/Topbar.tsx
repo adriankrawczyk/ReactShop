@@ -150,14 +150,16 @@ const Topbar = () => {
         (opinion) => opinion.author === localStorage.getItem("logged_user")
       );
       setHasUserSubmittedOpinion(userHasSubmitted);
-      console.log(userHasSubmitted);
     } else {
       setHasUserSubmittedOpinion(false);
+      setOpinionArray([]);
     }
   }, [opinionArray, currentOpinionItemTitle]);
 
+  // Fetch opinions when currentOpinionItemTitle changes
   useEffect(() => {
     if (currentOpinionItemTitle) {
+      setIsLoading(true); // Set loading to true before fetching
       fetch(
         `http://localhost:5000/api/items/${currentOpinionItemTitle}/opinions`
       )
@@ -167,6 +169,7 @@ const Topbar = () => {
         })
         .catch((error) => console.error("Error fetching opinions:", error))
         .finally(() => {
+          // Show spinner for 100 ms before hiding it
           setTimeout(() => setIsLoading(false), 100);
         });
     }
@@ -202,6 +205,7 @@ const Topbar = () => {
         rating,
       };
 
+      setIsLoading(true); // Set loading to true before submitting
       const response = await fetch(
         `http://localhost:5000/api/items/${encodeURIComponent(
           currentOpinionItemTitle
@@ -220,23 +224,22 @@ const Topbar = () => {
         const data = await response.json();
         throw new Error(data.message || "Failed to add opinion");
       }
-
-      // Update opinionArray locally immediately
       setOpinionArray([...opinionArray, newOpinion]);
-
-      // Update hasUserSubmittedOpinion to true
       setHasUserSubmittedOpinion(true);
-
-      // Clear input and rating after successful submission
       setInputValue("");
       setRating(0);
     } catch (error) {
       console.error("Error adding opinion:", error);
+    } finally {
+      setTimeout(() => setIsLoading(false), 100);
     }
   };
+
   return (
     <TopbarContainer>
-      Hello, {localStorage.getItem("logged_user")}
+      {currentOpinionItemTitle.length
+        ? ""
+        : `Hello, ${localStorage.getItem("logged_user")}`}
       <LogoutButton
         onClick={
           currentOpinionItemTitle.length
@@ -251,7 +254,9 @@ const Topbar = () => {
       >
         <FontAwesomeIcon icon={faSignOut}></FontAwesomeIcon>
       </LogoutButton>
-      {!hasUserSubmittedOpinion && !isLoading && currentOpinionItemTitle && (
+
+      {(currentOpinionItemTitle.length === 0 ||
+        (!hasUserSubmittedOpinion && currentOpinionItemTitle)) && (
         <InputContainer>
           {isLoading ? (
             <SpinnerContainer>

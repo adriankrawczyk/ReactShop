@@ -104,7 +104,7 @@ const Opinion = ({
 
   const showDelete = () => {
     const user = localStorage.getItem("logged_user");
-    const isAdmin = localStorage.getItem("isAdmin") === "true"; // Assuming isAdmin is stored as a string "true" or "false"
+    const isAdmin = localStorage.getItem("isAdmin") === "admin";
     return isAdmin || author === user;
   };
 
