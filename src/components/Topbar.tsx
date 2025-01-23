@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { useEffect, useState } from "react";
 import { useAppContext } from "../AppContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -21,31 +21,6 @@ const TopbarContainer = styled.div`
   width: 90vw;
   height: 10vh;
   border-bottom: 1px solid #bbb;
-`;
-
-const InputContainer = styled.div`
-  position: relative;
-  width: 50vw;
-  height: 10vh;
-  margin-left: 10vw;
-  display: flex;
-  align-items: center;
-`;
-const Input = styled.input`
-  width: 100%;
-  height: 100%;
-  border-right: 1px solid #bbb;
-  border-left: 1px solid #bbb;
-  border-top: 0;
-  border-bottom: 0;
-  font-size: 2vmax;
-  padding-left: 1vmax;
-  outline: none;
-`;
-const InputIconContainer = styled.div`
-  position: absolute;
-  right: 1vmax;
-  font-size: 2vmax;
 `;
 
 const CartButton = styled.div<{ $active?: boolean; $empty?: boolean }>`
@@ -93,6 +68,57 @@ const LogoutButton = styled.div`
   ${WithTransition()};
 `;
 
+const InputContainer = styled.div`
+  position: relative;
+  width: 50vw;
+  height: 10vh;
+  margin-left: 10vw;
+  display: flex;
+  align-items: center;
+`;
+
+const SpinnerContainer = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const Spinner = styled.div`
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-left-color: ${ColorScheme.green};
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 1s linear infinite;
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+`;
+
+const Input = styled.input<{ isLoading?: boolean }>`
+  width: 100%;
+  height: 100%;
+  border-right: 1px solid #bbb;
+  border-left: 1px solid #bbb;
+  border-top: 0;
+  border-bottom: 0;
+  font-size: 2vmax;
+  padding-left: 1vmax;
+  outline: none;
+  display: ${({ isLoading }) => (isLoading ? "none" : "block")};
+`;
+
+const InputIconContainer = styled.div`
+  position: absolute;
+  right: 1vmax;
+  font-size: 2vmax;
+`;
 const Topbar = () => {
   const {
     inputValue,
@@ -107,21 +133,30 @@ const Topbar = () => {
     setCurrentOpinionItemTitle,
     setOpinionArray,
     opinionArray,
+    isLoading,
+    setIsLoading,
   } = useAppContext();
 
   const navigate = useNavigate();
   const isCartEmpty = cart.length === 0 && !cartMode;
   const isHistoryEmpty = bought.length === 0;
   const [rating, setRating] = useState(0);
+
   useEffect(() => {
-    fetch(`http://localhost:5000/api/items/${currentOpinionItemTitle}/opinions`)
-      .then((response) => response.json())
-      .then((opinions) => {
-        setOpinionArray(opinions);
-      })
-      .catch((error) => console.error("Error:", error));
-    if (currentOpinionItemTitle === "") setOpinionArray([]);
-  }, [inputValue, currentOpinionItemTitle, opinionArray]);
+    if (currentOpinionItemTitle) {
+      fetch(
+        `http://localhost:5000/api/items/${currentOpinionItemTitle}/opinions`
+      )
+        .then((response) => response.json())
+        .then((opinions) => {
+          setOpinionArray(opinions);
+        })
+        .catch((error) => console.error("Error fetching opinions:", error))
+        .finally(() => {
+          setTimeout(() => setIsLoading(false), 100);
+        });
+    }
+  }, [currentOpinionItemTitle, setOpinionArray]);
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (
@@ -139,6 +174,7 @@ const Topbar = () => {
     navigate("/");
     location.reload();
   };
+
   const addNewOpinion = async (content: string) => {
     try {
       const response = await fetch(
@@ -183,15 +219,21 @@ const Topbar = () => {
       </LogoutButton>
       {opinionArray.find(
         (e) => e.author === localStorage.getItem("logged_user")
-      ) ? (
+      ) && !isLoading ? (
         <></>
       ) : (
         <InputContainer>
-          <Input
-            onChange={(e) => setInputValue(e.target.value)}
-            value={inputValue}
-            onKeyPress={handleKeyPress}
-          />
+          {isLoading ? (
+            <SpinnerContainer>
+              <Spinner />
+            </SpinnerContainer>
+          ) : (
+            <Input
+              onChange={(e) => setInputValue(e.target.value)}
+              value={inputValue}
+              onKeyPress={handleKeyPress}
+            />
+          )}
           <InputIconContainer
             onClick={() => {
               if (currentOpinionItemTitle && inputValue && rating > 0) {
@@ -199,7 +241,9 @@ const Topbar = () => {
               }
             }}
           >
-            {currentOpinionItemTitle ? (
+            {isLoading ? (
+              <></>
+            ) : currentOpinionItemTitle ? (
               [...Array(5)].map((el, index) => (
                 <FontAwesomeIcon
                   key={index}

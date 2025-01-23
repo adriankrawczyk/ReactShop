@@ -202,6 +202,7 @@ const Item = ({
     setCartMode,
     bought,
     boughtMode,
+    setIsLoading,
   } = useAppContext();
 
   const getQuantity = () => {
@@ -276,7 +277,12 @@ const Item = ({
             />
           ))}
         </StarsContainer>
-        <MessageButton onClick={() => setCurrentOpinionItemTitle(title)}>
+        <MessageButton
+          onClick={() => {
+            setIsLoading(true);
+            setCurrentOpinionItemTitle(title);
+          }}
+        >
           <FontAwesomeIcon icon={faMessage}></FontAwesomeIcon>
           <MessageQuantityDisplayer>{opinions.length}</MessageQuantityDisplayer>
         </MessageButton>

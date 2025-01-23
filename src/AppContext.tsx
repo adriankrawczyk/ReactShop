@@ -15,6 +15,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
   const [cartMode, setCartMode] = useState(false);
   const [opinionArray, setOpinionArray] = useState<Array<OpinionInterface>>([]);
   const [boughtMode, setBoughtMode] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
   const [currentOpinionItemTitle, setCurrentOpinionItemTitle] = useState("");
   const [data, setData] = useState<Array<ItemInterface>>([]);
   const [activeCategoryArray, setActiveCategoryArray] = useState<
@@ -42,6 +44,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
         setActiveCategoryArray,
         opinionArray,
         setOpinionArray,
+        isLoading,
+        setIsLoading,
       }}
     >
       {children}
