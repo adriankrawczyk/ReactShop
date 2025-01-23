@@ -11,6 +11,7 @@ import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { useAppContext } from "../AppContext";
 import { ColorScheme } from "../Schemes/StyleScheme";
+import { useNavigate } from "react-router-dom";
 
 const BuyButton = styled.div`
   width: 75px;
@@ -49,6 +50,8 @@ const PriceDisplayer = styled.div`
 `;
 
 const HomeScreen = () => {
+  const navigate = useNavigate();
+  if (!localStorage.getItem("logged_user")?.length) navigate("/");
   const { cart, data, bought, setBought, setCart } = useAppContext();
   const [totalPrice, setTotalPrice] = useState(0);
 

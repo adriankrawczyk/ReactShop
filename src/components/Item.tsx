@@ -211,12 +211,9 @@ const Item = ({
       return boughtItem?.quantity || 0;
     } else {
       const cartItem = cart.find((item) => item.title === title);
-      const boughtItem = bought.find((item) => item.title === title);
       return cartMode
         ? cartItem?.quantity || 0
-        : baseQuantity -
-            (cartItem?.quantity || 0) -
-            (boughtItem?.quantity || 0);
+        : baseQuantity - (cartItem?.quantity || 0);
     }
   };
 
