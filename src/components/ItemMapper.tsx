@@ -3,9 +3,9 @@ import Item from "./Item";
 import ItemInterface from "../Interfaces/ItemInterface";
 import styled from "styled-components";
 import { useAppContext } from "../AppContext";
-import DatabaseItemInterface from "../Interfaces/DatabaseItemInterface";
-import OpinionInterface from "../Interfaces/OpinionInterface";
+import DatabaseItemInterface from "../Interfaces/DatabaseItemInterface.ts";
 import Opinion from "./Opinion";
+import OpinionInterface from "../Interfaces/OpinionInterface.ts";
 
 const ItemMapperWrapper = styled.div`
   padding-top: 3.5vh;
@@ -32,6 +32,28 @@ const ErrorMessage = styled.div`
   text-align: center;
   font-size: 1.1rem;
 `;
+
+export const refreshDatabaseItems = async () => {
+  try {
+    const response = await fetch("http://localhost:5000/api/items", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data: DatabaseItemInterface[] = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching database items:", error);
+    return [];
+  }
+};
 
 const ItemMapper = () => {
   const {
@@ -184,12 +206,17 @@ const ItemMapper = () => {
     }
   }, [inputValue, currentOpinionItemTitle]);
 
-  // Filter and update display data
   useEffect(() => {
     const areAllCategoriesInactive = activeCategoryArray.every(
       (active) => !active
     );
-    setUniqueCategories([...new Set(data.map(({ category }) => category))]);
+    setUniqueCategories([
+      ...new Set(
+        data
+          .map(({ category }) => category)
+          .filter((category): category is string => !!category)
+      ),
+    ]);
     setDisplayData(
       data
         .filter((e) => {
@@ -218,6 +245,7 @@ const ItemMapper = () => {
     boughtMode,
     activeCategoryArray,
     data,
+    uniqueCategories,
   ]);
 
   const renderOpinions = () => {
@@ -233,7 +261,7 @@ const ItemMapper = () => {
       );
     }
 
-    return currentItem.opinions.map((opinion, index) => (
+    return currentItem.opinions.map((opinion: OpinionInterface, index: int) => (
       <Opinion
         key={`opinion-${index}`}
         author={opinion.author}
@@ -277,28 +305,6 @@ const ItemMapper = () => {
           })}
     </ItemMapperWrapper>
   );
-};
-
-export const refreshDatabaseItems = async () => {
-  try {
-    const response = await fetch("http://localhost:5000/api/items", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const data: DatabaseItemInterface[] = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error fetching database items:", error);
-    return [];
-  }
 };
 
 export default ItemMapper;

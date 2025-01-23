@@ -60,7 +60,9 @@ const HomeScreen = () => {
     data.forEach((e) => {
       const cartItem = cart.find((item) => item.title === e.title);
       if (cartItem) {
-        setTotalPrice((p) => p + parseFloat(e.price) * cartItem.quantity);
+        setTotalPrice(
+          (p) => p + parseFloat(e.price ? e.price : "0") * cartItem.quantity
+        );
       }
     });
     setTotalPrice((p) => Math.round(p * 100) / 100);
@@ -110,7 +112,6 @@ const HomeScreen = () => {
       setCart([]);
     } catch (error) {
       console.error("Error during purchase:", error);
-      alert(error.message);
     }
   };
   return (

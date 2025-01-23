@@ -1,4 +1,3 @@
-import React, { useContext } from "react";
 import styled from "styled-components";
 import OpinionInterface from "../Interfaces/OpinionInterface";
 import {
@@ -8,7 +7,6 @@ import {
 } from "../Schemes/StyleScheme";
 import { faX, faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { refreshDatabaseItems } from "./ItemMapper";
 import { useAppContext } from "../AppContext";
 
 const OpinionElement = styled.div`
@@ -94,9 +92,8 @@ const Opinion = ({
         throw new Error(data.message || "Failed to delete opinion");
       }
 
-      // Update local state to reflect the deletion
       setOpinionArray(opinionArray.filter((el) => el.author !== author));
-      onDelete(); // Call the onDelete callback if provided
+      onDelete();
     } catch (error) {
       console.error("Error deleting opinion:", error);
     }

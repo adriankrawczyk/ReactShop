@@ -1,5 +1,4 @@
 na teraz:
-• logowanie przy użyciu JWT razem z refresh tokenem!
 -responsywność
 
 

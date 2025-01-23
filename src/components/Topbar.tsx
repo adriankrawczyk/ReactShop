@@ -1,4 +1,4 @@
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { useAppContext } from "../AppContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -12,6 +12,7 @@ import {
 import { ColorScheme } from "../Schemes/StyleScheme";
 import { WithTransition } from "../Schemes/StyleScheme";
 import { useNavigate } from "react-router-dom";
+import OpinionInterface from "../Interfaces/OpinionInterface";
 
 const TopbarContainer = styled.div`
   display: flex;
@@ -154,12 +155,11 @@ const Topbar = () => {
       setHasUserSubmittedOpinion(false);
       setOpinionArray([]);
     }
-  }, [opinionArray, currentOpinionItemTitle]);
+  }, [opinionArray, currentOpinionItemTitle, setOpinionArray]);
 
-  // Fetch opinions when currentOpinionItemTitle changes
   useEffect(() => {
     if (currentOpinionItemTitle) {
-      setIsLoading(true); // Set loading to true before fetching
+      setIsLoading(true);
       fetch(
         `http://localhost:5000/api/items/${currentOpinionItemTitle}/opinions`
       )
@@ -169,11 +169,10 @@ const Topbar = () => {
         })
         .catch((error) => console.error("Error fetching opinions:", error))
         .finally(() => {
-          // Show spinner for 100 ms before hiding it
           setTimeout(() => setIsLoading(false), 100);
         });
     }
-  }, [currentOpinionItemTitle, setOpinionArray]);
+  }, [currentOpinionItemTitle, setIsLoading, setOpinionArray]);
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (
@@ -205,7 +204,7 @@ const Topbar = () => {
         rating,
       };
 
-      setIsLoading(true); // Set loading to true before submitting
+      setIsLoading(true);
       const response = await fetch(
         `http://localhost:5000/api/items/${encodeURIComponent(
           currentOpinionItemTitle
@@ -224,7 +223,7 @@ const Topbar = () => {
         const data = await response.json();
         throw new Error(data.message || "Failed to add opinion");
       }
-      setOpinionArray([...opinionArray, newOpinion]);
+      setOpinionArray([...opinionArray, newOpinion as OpinionInterface]);
       setHasUserSubmittedOpinion(true);
       setInputValue("");
       setRating(0);

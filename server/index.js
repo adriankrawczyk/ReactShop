@@ -25,15 +25,12 @@ const connectDB = async () => {
   }
 };
 
-// JWT Secret Key
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
 
-// Generate JWT Token
 const generateToken = (userId) => {
   return jwt.sign({ userId }, JWT_SECRET, { expiresIn: "1h" });
 };
 
-// Verify JWT Token Middleware
 const authMiddleware = (req, res, next) => {
   const token = req.header("Authorization")?.replace("Bearer ", "");
   if (!token) {
@@ -50,7 +47,6 @@ const authMiddleware = (req, res, next) => {
   }
 };
 
-// User management endpoints
 app.post("/api/users/signup", async (req, res) => {
   try {
     const { username, password, email, isAdmin, permissions } = req.body;
@@ -66,7 +62,6 @@ app.post("/api/users/signup", async (req, res) => {
         .json({ message: "A user with this username already exists." });
     }
 
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = {
@@ -87,7 +82,6 @@ app.post("/api/users/signup", async (req, res) => {
   }
 });
 
-// Login endpoint
 app.post("/api/users/login", async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -101,14 +95,12 @@ app.post("/api/users/login", async (req, res) => {
     if (!user) {
       return res.status(400).json({ message: "Invalid credentials." });
     }
-    console.log(bcrypt.hashSync(user.password));
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       return res.status(400).json({ message: "Invalid credentials." });
     }
 
-    // Generate JWT token
     const token = generateToken(user._id);
     res.json({ token });
   } catch (error) {
@@ -117,7 +109,6 @@ app.post("/api/users/login", async (req, res) => {
   }
 });
 
-// Protected route example
 app.get("/api/protected", authMiddleware, async (req, res) => {
   try {
     const user = await db.collection("Users").findOne({ _id: req.userId });
@@ -131,7 +122,6 @@ app.get("/api/protected", authMiddleware, async (req, res) => {
   }
 });
 
-// Cart management endpoints
 app.get("/api/users/:username/cart", authMiddleware, async (req, res) => {
   try {
     const { username } = req.params;
@@ -172,7 +162,6 @@ app.post("/api/users/:username/cart", authMiddleware, async (req, res) => {
   }
 });
 
-// Purchase history endpoints
 app.get("/api/users/:username/purchases", authMiddleware, async (req, res) => {
   try {
     const { username } = req.params;
@@ -189,7 +178,6 @@ app.get("/api/users/:username/purchases", authMiddleware, async (req, res) => {
   }
 });
 
-// Item management endpoints
 app.get("/api/items", (req, res) => {
   fetchCollectionData("Items", res);
 });
@@ -213,12 +201,10 @@ app.post("/api/items/buy", authMiddleware, async (req, res) => {
         .json({ message: `Not enough stock for item "${title}".` });
     }
 
-    // Update item quantity
     await db
       .collection("Items")
       .updateOne({ title }, { $inc: { quantity: -quantity } });
 
-    // Add to user's purchase history and clear cart
     const purchase = {
       title,
       quantity,
@@ -241,7 +227,6 @@ app.post("/api/items/buy", authMiddleware, async (req, res) => {
   }
 });
 
-// Opinion management endpoints
 app.delete("/api/items/:title/opinion", authMiddleware, async (req, res) => {
   try {
     const { title } = req.params;
@@ -331,7 +316,7 @@ app.post("/api/items/:title/opinion", authMiddleware, async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
-// Helper function
+
 const fetchCollectionData = async (collectionName, res) => {
   try {
     const data = await db.collection(collectionName).find().toArray();
@@ -342,7 +327,6 @@ const fetchCollectionData = async (collectionName, res) => {
   }
 };
 
-// Server startup and shutdown
 connectDB().then(() => {
   app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);

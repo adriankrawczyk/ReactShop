@@ -1,4 +1,4 @@
-import React, { useState, FormEvent, useEffect } from "react";
+import { useState, FormEvent, useEffect } from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -14,15 +14,6 @@ import {
   WithTransition,
 } from "../Schemes/StyleScheme";
 import { useNavigate } from "react-router-dom";
-
-interface User {
-  _id: string;
-  username: string;
-  email: string;
-  isAdmin: boolean;
-  permissions: string[];
-  password: string;
-}
 
 interface Errors {
   username?: string;

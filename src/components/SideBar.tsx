@@ -37,8 +37,8 @@ const SideBar = () => {
 
   const uniqueCategories = [
     ...new Set(
-      data.map(
-        ({ category }) => category.charAt(0).toUpperCase() + category.slice(1)
+      data.map(({ category }) =>
+        category ? category.charAt(0).toUpperCase() + category.slice(1) : 0
       )
     ),
   ];

@@ -185,6 +185,7 @@ const Quantity = styled.div`
   align-items: center;
   justify-content: center;
 `;
+
 const Item = ({
   title,
   image,
@@ -266,7 +267,7 @@ const Item = ({
         </QuantityDisplayer>
         <Description>{description}</Description>
         <StarsContainer>
-          {[...Array(Math.round(rating.rate))].map((el, index) => (
+          {[...Array(Math.round(rating ? rating.rate : 0))].map((_, index) => (
             <FontAwesomeIcon
               style={{ color: "gold" }}
               key={index}
@@ -281,7 +282,9 @@ const Item = ({
           }}
         >
           <FontAwesomeIcon icon={faMessage}></FontAwesomeIcon>
-          <MessageQuantityDisplayer>{opinions.length}</MessageQuantityDisplayer>
+          <MessageQuantityDisplayer>
+            {opinions ? opinions.length : 0}
+          </MessageQuantityDisplayer>
         </MessageButton>
       </OtherInfoContainer>
     </ItemElement>
