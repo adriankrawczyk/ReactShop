@@ -8,7 +8,7 @@ Witaj w projekcie ReactShop! Poniżej znajdziesz zrzuty ekranu z aplikacji, któ
 
 ### 1. Logowanie
 
-[<img alt="Strona główna" width="1080px" src="https://i.ibb.co/mBXp9W5/image.png" />](https://ibb.co/mBXp9W5)
+[<img src="https://i.ibb.co/mBXp9W5/image.png" alt="Logowanie" width="800" />](https://ibb.co/mBXp9W5)
 
 ---
 
