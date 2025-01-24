@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { useAppContext } from "../../AppContext";
-import DatabaseItemInterface from "../../Interfaces/DatabaseItemInterface";
 import ItemInterface from "../../Interfaces/ItemInterface";
 import {
   refreshDatabaseItems,
   fetchCartData,
   fetchPurchaseHistory,
 } from "./ItemMapper.utils";
+import { DatabaseItemInterface } from "../../Interfaces/DatabaseItemIterface";
 
 export const useItemMapperLogic = () => {
   const {
@@ -94,7 +94,7 @@ export const useItemMapperLogic = () => {
           setCart(cartData);
           setBought(purchaseData);
         } catch (error) {
-          setError(error.message);
+          if (error instanceof Error) setError(error.message);
         }
       }
       await refreshData();

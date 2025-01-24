@@ -1,4 +1,4 @@
-import DatabaseItemInterface from "../../Interfaces/DatabaseItemInterface";
+import { DatabaseItemInterface } from "../../Interfaces/DatabaseItemIterface";
 
 export const refreshDatabaseItems = async () => {
   try {

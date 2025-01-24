@@ -34,6 +34,7 @@ const Item = ({
   baseQuantity,
   opinions,
   description,
+  quantity, // Add this property
 }: ItemInterface & { baseQuantity: number }) => {
   const {
     getQuantity,
@@ -43,7 +44,13 @@ const Item = ({
     cartMode,
   } = useItemLogic({
     title,
+    image,
+    price,
+    rating,
     baseQuantity,
+    opinions,
+    description,
+    quantity, // Pass this property
   });
 
   if (getQuantity() === 0) return <></>;

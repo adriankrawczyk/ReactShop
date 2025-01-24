@@ -18,7 +18,9 @@ const Opinion = ({
   onDelete,
 }: OpinionInterface & { onDelete: () => void }) => {
   const { handleDelete, showDelete } = useOpinionLogic({
+    content,
     author,
+    rating,
     itemTitle,
     onDelete,
   });
