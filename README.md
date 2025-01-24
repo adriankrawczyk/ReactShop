@@ -42,12 +42,12 @@ Witaj w ReactShop! Poniżej znajdziesz zrzuty ekranu ze strony, które pokazują
 
 ### 7. Koszyk
 
-![Rejestracja użytkownika](./public/7.png)
+![Rejestracja użytkownika](./public/10.png)
 
 ---
 ### 8. Opinie
 
-![Rejestracja użytkownika](./public/7.png)
+![Rejestracja użytkownika](./public/11.png)
 
 ---
 
@@ -56,28 +56,24 @@ Witaj w ReactShop! Poniżej znajdziesz zrzuty ekranu ze strony, które pokazują
 # Frontend
 
 ````
-```
 npm install
 npm run dev
-```
 ````
 
 # Backend
 ````
-```
 cd server
 nodemon index.js
-```
 ````
 ## Technologie
 
-Frontend: React, Typescript
+# Frontend: React, Typescript
 
-Backend: Node.js, Express, MongoDB
+# Backend: Node.js, Express, MongoDB
 
-Autentykacja: JWT (JSON Web Tokens)
+# Autentykacja: JWT (JSON Web Tokens)
 
-Inne narzędzia: Postman, Git, GitHub
+# Inne narzędzia: Postman, Git, GitHub
 
-Autor
-Adrian Krawczyk
+## Autor
+# Adrian Krawczyk
