@@ -202,6 +202,7 @@ const LoginScreen = () => {
 
         const { token, isAdmin } = await response.json();
         localStorage.setItem("isAdmin", isAdmin ? "admin" : "");
+
         localStorage.setItem("token", token);
         localStorage.setItem("logged_user", username);
         navigate("/shop");

@@ -84,8 +84,12 @@ app.post("/api/users/signup", async (req, res) => {
     // Generate token for the new user
     const token = generateToken(result.insertedId);
 
-    // Return the token in the response
-    res.status(201).json({ message: "User registered successfully.", token });
+    // Return the token and isAdmin status in the response
+    res.status(201).json({
+      message: "User registered successfully.",
+      token,
+      isAdmin: newUser.isAdmin,
+    });
   } catch (error) {
     console.error("Error during user registration:", error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -112,8 +116,11 @@ app.post("/api/users/login", async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials." });
     }
 
+    // Generate token for the logged-in user
     const token = generateToken(user._id);
-    res.json({ token });
+
+    // Return the token and isAdmin status in the response
+    res.json({ token, isAdmin: user.isAdmin });
   } catch (error) {
     console.error("Error during login:", error);
     res.status(500).json({ message: "Internal Server Error" });
