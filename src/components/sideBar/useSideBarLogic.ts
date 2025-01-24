@@ -10,6 +10,8 @@ export const useSideBarLogic = () => {
     setCart,
     activeCategoryArray,
     setActiveCategoryArray,
+    setCartMode,
+    setBoughtMode,
   } = useAppContext();
   const [totalPrice, setTotalPrice] = useState(0);
 
@@ -68,6 +70,8 @@ export const useSideBarLogic = () => {
 
       setBought(updatedBought);
       setCart([]);
+      setCartMode(false);
+      setBoughtMode(true);
     } catch (error) {
       console.error("Error during purchase:", error);
     }

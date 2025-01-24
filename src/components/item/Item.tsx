@@ -34,7 +34,7 @@ const Item = ({
   baseQuantity,
   opinions,
   description,
-  quantity, // Add this property
+  quantity,
 }: ItemInterface & { baseQuantity: number }) => {
   const {
     getQuantity,
@@ -50,7 +50,7 @@ const Item = ({
     baseQuantity,
     opinions,
     description,
-    quantity, // Pass this property
+    quantity,
   });
 
   if (getQuantity() === 0) return <></>;

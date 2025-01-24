@@ -30,7 +30,6 @@ export const useTopbarLogic = () => {
   const { addNewOpinion, handleKeyPress, rating, setRating } =
     useOpinionHandlers();
 
-  // Check if the user has submitted an opinion
   useEffect(() => {
     if (currentOpinionItemTitle) {
       const userHasSubmitted = opinionArray.some(
@@ -43,7 +42,6 @@ export const useTopbarLogic = () => {
     }
   }, [opinionArray, currentOpinionItemTitle, setOpinionArray]);
 
-  // Fetch opinions when the current opinion item changes
   useEffect(() => {
     if (currentOpinionItemTitle) {
       setIsLoading(true);
@@ -86,7 +84,6 @@ export const useTopbarLogic = () => {
     }
   }, [currentOpinionItemTitle, setIsLoading, setOpinionArray]);
 
-  // Handle user logout
   const signOut = () => {
     localStorage.setItem("logged_user", "");
     navigate("/");
