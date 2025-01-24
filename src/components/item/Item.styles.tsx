@@ -1,19 +1,11 @@
 import styled from "styled-components";
-import ItemInterface from "../Interfaces/ItemInterface";
 import {
   ColorScheme,
   StyleScheme,
   WithTransition,
-} from "../Schemes/StyleScheme";
-import { useAppContext } from "../AppContext";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faPlus,
-  faX,
-  faStar,
-  faMessage,
-} from "@fortawesome/free-solid-svg-icons";
-const ItemElement = styled.div`
+} from "../../Schemes/StyleScheme";
+
+export const ItemElement = styled.div`
   display: flex;
   width: 90%;
   margin-bottom: 3.5vh;
@@ -36,7 +28,7 @@ const ItemElement = styled.div`
   }
 `;
 
-const ImageContainer = styled.div`
+export const ImageContainer = styled.div`
   width: 200px;
   height: 100%;
   border-right: 2px solid ${StyleScheme.borderColor};
@@ -49,7 +41,7 @@ const ImageContainer = styled.div`
   }
 `;
 
-const Image = styled.img`
+export const Image = styled.img`
   width: 120px;
   border-left: 2px solid #bbb;
   @media (max-width: 480px) {
@@ -59,7 +51,7 @@ const Image = styled.img`
   }
 `;
 
-const ItemInfo = styled.div`
+export const ItemInfo = styled.div`
   position: relative;
   width: 80px;
   display: flex;
@@ -76,7 +68,7 @@ const ItemInfo = styled.div`
   }
 `;
 
-const Price = styled.div`
+export const Price = styled.div`
   font-weight: 600;
   position: absolute;
   top: 20px;
@@ -89,7 +81,7 @@ const Price = styled.div`
   }
 `;
 
-const AddButton = styled.div<{ $add: boolean }>`
+export const AddButton = styled.div<{ $add: boolean }>`
   position: absolute;
   width: 40px;
   height: 40px;
@@ -113,7 +105,7 @@ const AddButton = styled.div<{ $add: boolean }>`
   }
 `;
 
-const TitleContainer = styled.div`
+export const TitleContainer = styled.div`
   width: 15vw;
   padding: 1vw;
   height: 100%;
@@ -135,7 +127,7 @@ const TitleContainer = styled.div`
   }
 `;
 
-const TitleAndDescriptionContainer = styled.div`
+export const TitleAndDescriptionContainer = styled.div`
   display: flex;
   align-items: center;
 
@@ -145,7 +137,7 @@ const TitleAndDescriptionContainer = styled.div`
   }
 `;
 
-const Description = styled.div`
+export const Description = styled.div`
   font-size: 0.75em;
   padding: 0.25vmax;
   top: 0%;
@@ -174,7 +166,7 @@ const Description = styled.div`
   }
 `;
 
-const OtherInfoContainer = styled.div`
+export const OtherInfoContainer = styled.div`
   width: 35vw;
   height: 100%;
   position: relative;
@@ -188,7 +180,7 @@ const OtherInfoContainer = styled.div`
   }
 `;
 
-const StarsContainer = styled.div`
+export const StarsContainer = styled.div`
   position: absolute;
   right: 0.5vmax;
   top: 0.5vmax;
@@ -217,7 +209,7 @@ const StarsContainer = styled.div`
   }
 `;
 
-const MessageButton = styled.div`
+export const MessageButton = styled.div`
   width: 3vmax;
   height: 3vmax;
   background-color: white;
@@ -245,7 +237,7 @@ const MessageButton = styled.div`
   }
 `;
 
-const MessageQuantityDisplayer = styled.div`
+export const MessageQuantityDisplayer = styled.div`
   font-weight: 600;
   width: 2vmax;
   height: 2vmax;
@@ -269,7 +261,7 @@ const MessageQuantityDisplayer = styled.div`
   }
 `;
 
-const QuantityDisplayer = styled.div`
+export const QuantityDisplayer = styled.div`
   position: absolute;
   width: 5vmax;
   height: 100%;
@@ -294,7 +286,7 @@ const QuantityDisplayer = styled.div`
   }
 `;
 
-const QuantityText = styled.div`
+export const QuantityText = styled.div`
   font-size: 1.1vmax;
   font-weight: 600;
 
@@ -303,7 +295,7 @@ const QuantityText = styled.div`
   }
 `;
 
-const Quantity = styled.div`
+export const Quantity = styled.div`
   cursor: default;
   font-weight: 600;
   width: 3vmax;
@@ -322,108 +314,3 @@ const Quantity = styled.div`
     font-size: 1.2em;
   }
 `;
-const Item = ({
-  title,
-  image,
-  price,
-  rating,
-  baseQuantity,
-  opinions,
-  description,
-}: ItemInterface & { baseQuantity: number }) => {
-  const {
-    cart,
-    setCart,
-    cartMode,
-    setCurrentOpinionItemTitle,
-    setCartMode,
-    bought,
-    boughtMode,
-    setIsLoading,
-  } = useAppContext();
-  const getQuantity = () => {
-    if (boughtMode) {
-      const boughtItem = bought.find((item) => item.title === title);
-      return boughtItem?.quantity || 0;
-    } else {
-      const cartItem = cart.find((item) => item.title === title);
-      return cartMode
-        ? cartItem?.quantity || 0
-        : baseQuantity - (cartItem?.quantity || 0);
-    }
-  };
-
-  const handleAddToCart = () => {
-    if (getQuantity() <= 0) return;
-    if (!cartMode) {
-      const existingItem = cart.find((item) => item.title === title);
-
-      if (!existingItem) {
-        setCart([...cart, { title, quantity: 1 }]);
-      } else {
-        const updatedCart = cart.map((item) =>
-          item.title === title ? { ...item, quantity: item.quantity + 1 } : item
-        );
-        setCart(updatedCart);
-      }
-    } else {
-      const updatedCart = cart.map((item) =>
-        item.title === title ? { ...item, quantity: item.quantity - 1 } : item
-      );
-      setCart(updatedCart);
-      if (updatedCart.every((c) => c.quantity === 0)) {
-        setCartMode(false);
-      }
-    }
-  };
-
-  if (getQuantity() === 0) return <></>;
-
-  return (
-    <ItemElement>
-      <ImageContainer>
-        <ItemInfo>
-          <Price>{price}$</Price>
-          {!boughtMode && (
-            <AddButton $add={!cartMode} onClick={handleAddToCart}>
-              <FontAwesomeIcon icon={cartMode ? faX : faPlus} />
-            </AddButton>
-          )}
-        </ItemInfo>
-        <Image src={image}></Image>
-      </ImageContainer>
-      <TitleAndDescriptionContainer>
-        <TitleContainer>{title}</TitleContainer>
-      </TitleAndDescriptionContainer>
-      <OtherInfoContainer>
-        <QuantityDisplayer>
-          <QuantityText>Quantity</QuantityText>
-          <Quantity>{getQuantity()}</Quantity>
-        </QuantityDisplayer>
-        <Description>{description}</Description>
-        <StarsContainer>
-          {[...Array(Math.round(rating ? rating.rate : 0))].map((_, index) => (
-            <FontAwesomeIcon
-              style={{ color: "gold" }}
-              key={index}
-              icon={faStar}
-            />
-          ))}
-        </StarsContainer>
-        <MessageButton
-          onClick={() => {
-            setIsLoading(true);
-            setCurrentOpinionItemTitle(title);
-          }}
-        >
-          <FontAwesomeIcon icon={faMessage}></FontAwesomeIcon>
-          <MessageQuantityDisplayer>
-            {opinions ? opinions.length : 0}
-          </MessageQuantityDisplayer>
-        </MessageButton>
-      </OtherInfoContainer>
-    </ItemElement>
-  );
-};
-
-export default Item;

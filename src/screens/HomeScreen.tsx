@@ -4,8 +4,8 @@ import {
   ContentDisplayer,
   ContentContainer,
 } from "../components/components";
-import ItemMapper from "../components/ItemMapper";
-import Topbar from "../components/topbar/Topbar.tsx";
+import ItemMapper from "../components/itemMapper/ItemMapper";
+import Topbar from "../components/topbar/Topbar";
 import SideBar from "../components/SideBar";
 import { useNavigate } from "react-router-dom";
 
