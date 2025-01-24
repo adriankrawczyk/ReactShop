@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
-import HomeScreen from "./screens/HomeScreen";
-import LoginScreen from "./screens/LoginScreen";
+import HomeScreen from "./screens/homeScreen/HomeScreen";
+import LoginScreen from "./screens/loginScreen/LoginScreen";
 
 const App: React.FC = () => (
   <BrowserRouter>

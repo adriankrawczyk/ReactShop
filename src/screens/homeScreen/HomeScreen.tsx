@@ -3,10 +3,10 @@ import {
   MainBox,
   ContentDisplayer,
   ContentContainer,
-} from "../components/components";
-import ItemMapper from "../components/itemMapper/ItemMapper";
-import Topbar from "../components/topbar/Topbar";
-import SideBar from "../components/sideBar/SideBar";
+} from "../../components/components";
+import ItemMapper from "../../components/itemMapper/ItemMapper";
+import Topbar from "../../components/topbar/Topbar";
+import SideBar from "../../components/sideBar/SideBar";
 import { useNavigate } from "react-router-dom";
 
 const HomeScreen = () => {
