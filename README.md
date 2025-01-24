@@ -1,50 +1,79 @@
-# React + TypeScript + Vite
+# ReactShop - Projekt Sklepu Internetowego
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Witaj w projekcie ReactShop! Poniżej znajdziesz zrzuty ekranu z aplikacji, które pokazują jej główne funkcje i interfejs użytkownika.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Zrzuty ekranu
 
-## Expanding the ESLint configuration
+### 1. Strona główna
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+![Strona główna](https://ibb.co/mBXp9W5)
 
-- Configure the top-level `parserOptions` property like this:
+---
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+### 2. Koszyk użytkownika
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+![Koszyk użytkownika](https://ibb.co/74BC4XW)
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+---
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+### 3. Historia zakupów
+
+![Historia zakupów](https://ibb.co/ncsQ9Ht)
+
+---
+
+### 4. Strona produktu
+
+![Strona produktu](https://ibb.co/r6Yzd1G)
+
+---
+
+### 5. Logowanie użytkownika
+
+![Logowanie użytkownika](https://ibb.co/GTHL9Y0)
+
+---
+
+### 6. Rejestracja użytkownika
+
+![Rejestracja użytkownika](https://ibb.co/tYWM6wt)
+
+---
+
+## Jak uruchomić projekt?
+
+1. Sklonuj repozytorium:
+   ```bash
+   git clone https://github.com/twoja-nazwa-uzytkownika/reactshop.git
+   Przejdź do katalogu projektu:
+   ```
+
+bash
+Copy
+cd reactshop
+Zainstaluj zależności:
+
+bash
+Copy
+npm install
+Uruchom serwer deweloperski:
+
+bash
+Copy
+npm start
+Otwórz przeglądarkę i przejdź do http://localhost:3000.
+
+Technologie
+
+Frontend: React, Typescript
+
+Backend: Node.js, Express, MongoDB
+
+Autentykacja: JWT (JSON Web Tokens)
+
+Inne narzędzia: Postman, Git, GitHub
+
+Autor
+Adrian Krawczyk
