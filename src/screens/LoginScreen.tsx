@@ -38,6 +38,13 @@ const ContentDisplayer = styled.div`
   display: flex;
   justify-content: space-evenly;
   align-items: center;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    width: 70vw;
+    height: auto;
+    padding: 20px;
+  }
 `;
 
 const FormContainer = styled.div`
@@ -46,6 +53,11 @@ const FormContainer = styled.div`
   align-items: center;
   padding: 20px;
   width: 45%;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    padding: 10px;
+  }
 `;
 
 const FormTitle = styled.h2`
@@ -104,6 +116,10 @@ const Input = styled.input<{ hasError: boolean }>`
   &::placeholder {
     color: #bbb;
   }
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 const Button = styled.button`
@@ -116,12 +132,20 @@ const Button = styled.button`
   font-size: 16px;
   cursor: pointer;
   ${WithTransition()}
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 const Divider = styled.div`
   width: 2px;
   height: 100%;
   background-color: ${StyleScheme.borderColor};
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 const LoginScreen = () => {
@@ -177,11 +201,10 @@ const LoginScreen = () => {
         }
 
         const { token } = await response.json();
-        localStorage.setItem("token", token); // Store JWT token
+        localStorage.setItem("token", token);
         localStorage.setItem("logged_user", username);
         navigate("/shop");
       } else {
-        // Signup request
         const response = await fetch("http://localhost:5000/api/users/signup", {
           method: "POST",
           headers: {
@@ -203,7 +226,7 @@ const LoginScreen = () => {
         }
 
         const { token } = await response.json();
-        localStorage.setItem("token", token); // Store JWT token
+        localStorage.setItem("token", token);
         localStorage.setItem("logged_user", username);
         navigate("/shop");
       }
