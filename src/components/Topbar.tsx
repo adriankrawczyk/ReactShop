@@ -110,9 +110,13 @@ const Input = styled.input<{ isLoading?: boolean }>`
   height: 100%;
   border: 1px solid #bbb;
   font-size: 2vmax;
-  padding-left: 1vmax;
+  padding-left: 1vw;
+  padding-right: 13vw;
   outline: none;
   display: ${({ isLoading }) => (isLoading ? "none" : "block")};
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 `;
 
 const InputIconContainer = styled.div`
@@ -125,22 +129,27 @@ const InputIconContainer = styled.div`
 
   @media (max-width: 480px) {
     font-size: 12px;
+    right: 0.5vmax;
     align-items: flex-start;
     height: 28px;
     overflow: visible;
     width: auto;
   }
 `;
+
 const StarsContainer = styled.div`
   display: flex;
   gap: 2px;
+  padding: 0 2px;
+  border-radius: 4px;
 
   @media (max-width: 480px) {
     flex-wrap: wrap;
     width: 50px;
+    gap: 1px;
+    padding: 2px;
   }
 `;
-
 const Topbar = () => {
   const {
     inputValue,
