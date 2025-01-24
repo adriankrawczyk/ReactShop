@@ -43,10 +43,11 @@ const TitleContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.25vw;
+  font-size: 1.5vmax;
   font-weight: 600;
   text-align: center;
   border-right: 2px solid #bbb;
+  word-wrap: break-word;
 `;
 
 const TitleAndDescriptionContainer = styled.div`
@@ -55,16 +56,19 @@ const TitleAndDescriptionContainer = styled.div`
 `;
 
 const Description = styled.div`
-  font-size: 0.7vmax;
+  font-size: 0.75em;
   padding: 0.25vmax;
   top: 0%;
   left: 6vmax;
-  width: 50%;
-  height: 20vh;
+  word-wrap: break-word;
+  width: 45%;
+  scrollbar-width: thin;
+  padding-right: 0.5vmax;
+  height: 18vh;
   position: absolute;
-  overflow: hidden;
+  overflow-y: scroll;
   display: none;
-  @media (min-width: 768px) {
+  @media (min-width: 764px) {
     display: block;
   }
 `;
@@ -114,24 +118,39 @@ const OtherInfoContainer = styled.div`
 const StarsContainer = styled.div`
   position: absolute;
   right: 0;
-  margin-top: 2vmin;
-  margin-right: 2vmin;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5vw;
+  font-size: 2.2vmin;
   gap: 0.1vw;
+  flex-direction: column;
+
+  @media (max-width: 1080px) {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    align-items: center;
+    justify-items: center;
+    margin-top: 0.5vmin;
+    margin-right: 0.5vmin;
+  }
+
+  @media (min-width: 1080px) {
+    flex-direction: row;
+    margin-top: 1vmin;
+    margin-right: 1vmin;
+  }
 `;
 
 const MessageButton = styled.div`
-  width: 3.5vmax;
-  height: 3.5vmax;
+  width: 3vmax;
+  height: 3vmax;
   background-color: white;
   border: 2px solid ${StyleScheme.borderColor};
   position: absolute;
   bottom: 0;
   right: 0;
-  margin-bottom: 1vmax;
+  margin-bottom: 0.75vmax;
   margin-right: 1vmax;
   display: flex;
   align-items: center;
@@ -159,17 +178,20 @@ const MessageQuantityDisplayer = styled.div`
 `;
 const QuantityDisplayer = styled.div`
   position: absolute;
-  width: 6vmax;
+  width: 5vmax;
   height: 100%;
-  border-right: 2px solid ${StyleScheme.borderColor};
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
   gap: 1.5vmax;
+  border-right: 2px solid ${StyleScheme.borderColor};
+  @media (max-width: 555px) {
+    border-right: none;
+  }
 `;
 const QuantityText = styled.div`
-  font-size: 1.25vmax;
+  font-size: 1.1vmax;
   font-weight: 600;
 `;
 const Quantity = styled.div`
@@ -205,7 +227,6 @@ const Item = ({
     boughtMode,
     setIsLoading,
   } = useAppContext();
-
   const getQuantity = () => {
     if (boughtMode) {
       const boughtItem = bought.find((item) => item.title === title);
