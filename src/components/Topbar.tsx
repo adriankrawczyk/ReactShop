@@ -30,8 +30,6 @@ const CartButton = styled.div<{ $active?: boolean; $empty?: boolean }>`
   width: 8vh;
   height: 8vh;
   border: 2px solid #bbb;
-  right: 8vw;
-  position: absolute;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -44,9 +42,7 @@ const HistoryButton = styled.div<{ $active?: boolean; $empty?: boolean }>`
   cursor: pointer;
   width: 8vh;
   height: 8vh;
-  right: 2vw;
   border: 2px solid #bbb;
-  position: absolute;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -61,19 +57,25 @@ const LogoutButton = styled.div`
   height: 8vh;
   border: 2px solid #bbb;
   position: absolute;
-  left: 2vw;
+  left: 1.5vw;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: ${ColorScheme.red};
   ${WithTransition()};
 `;
-
+const RightButtonsContainer = styled.div`
+  position: absolute;
+  right: 1.5vw;
+  display: flex;
+  gap: 2vw;
+  align-items: center;
+  height: 100%;
+`;
 const InputContainer = styled.div`
   position: absolute;
-  left: 50%;
-  transform: translateX(-20vw);
-  width: 50vw;
+  transform: translateX(5vw);
+  width: 40vw;
   height: 10vh;
   display: flex;
   align-items: center;
@@ -234,10 +236,8 @@ const Topbar = () => {
 
   return (
     <TopbarContainer>
-      <div style={{ position: "absolute", left: "10vw" }}>
-        {currentOpinionItemTitle.length
-          ? ""
-          : `Hello, ${localStorage.getItem("logged_user")}`}
+      <div style={{ position: "absolute", left: "13vw" }}>
+        {`Hi, ${localStorage.getItem("logged_user")}`}
       </div>
       <LogoutButton
         onClick={
@@ -299,30 +299,32 @@ const Topbar = () => {
           </InputIconContainer>
         </InputContainer>
       )}
-      <CartButton
-        $empty={isCartEmpty}
-        $active={!isCartEmpty && !cartMode}
-        onClick={() => {
-          if (!isCartEmpty) {
-            setCartMode(!cartMode);
-            if (boughtMode) setBoughtMode(false);
-          }
-        }}
-      >
-        <FontAwesomeIcon style={{ fontSize: "2vmax" }} icon={faCartShopping} />
-      </CartButton>
-      <HistoryButton
-        $empty={isHistoryEmpty}
-        $active={!isHistoryEmpty && !boughtMode}
-        onClick={() => {
-          if (!isHistoryEmpty) {
-            setBoughtMode(!boughtMode);
-            if (cartMode) setCartMode(false);
-          }
-        }}
-      >
-        <FontAwesomeIcon style={{ fontSize: "2vmax" }} icon={faDollarSign} />
-      </HistoryButton>
+      <RightButtonsContainer>
+        <CartButton
+          $empty={isCartEmpty}
+          $active={!isCartEmpty && !cartMode}
+          onClick={() => {
+            if (!isCartEmpty) {
+              setCartMode(!cartMode);
+              if (boughtMode) setBoughtMode(false);
+            }
+          }}
+        >
+          <FontAwesomeIcon style={{}} icon={faCartShopping} />
+        </CartButton>
+        <HistoryButton
+          $empty={isHistoryEmpty}
+          $active={!isHistoryEmpty && !boughtMode}
+          onClick={() => {
+            if (!isHistoryEmpty) {
+              setBoughtMode(!boughtMode);
+              if (cartMode) setCartMode(false);
+            }
+          }}
+        >
+          <FontAwesomeIcon style={{}} icon={faDollarSign} />
+        </HistoryButton>
+      </RightButtonsContainer>
     </TopbarContainer>
   );
 };
