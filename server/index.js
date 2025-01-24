@@ -55,6 +55,7 @@ app.post("/api/users/signup", async (req, res) => {
         .status(400)
         .json({ message: "Username, password, and email are required." });
     }
+
     const existingUser = await db.collection("Users").findOne({ username });
     if (existingUser) {
       return res
@@ -74,8 +75,17 @@ app.post("/api/users/signup", async (req, res) => {
       purchases: [],
     };
 
-    await db.collection("Users").insertOne(newUser);
-    res.status(201).json({ message: "User registered successfully." });
+    const result = await db.collection("Users").insertOne(newUser);
+
+    if (!result.insertedId) {
+      throw new Error("Failed to create user.");
+    }
+
+    // Generate token for the new user
+    const token = generateToken(result.insertedId);
+
+    // Return the token in the response
+    res.status(201).json({ message: "User registered successfully.", token });
   } catch (error) {
     console.error("Error during user registration:", error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -90,6 +100,7 @@ app.post("/api/users/login", async (req, res) => {
         .status(400)
         .json({ message: "Username and password are required." });
     }
+
     const user = await db.collection("Users").findOne({ username });
 
     if (!user) {
@@ -240,6 +251,7 @@ app.get("/api/items/:title/opinion", authMiddleware, async (req, res) => {
     if (!item) {
       return res.status(404).json({ message: "Item not found." });
     }
+
     res.status(200).json(item.opinions || []);
   } catch (error) {
     console.error("Error fetching opinions:", error);

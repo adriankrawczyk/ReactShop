@@ -203,7 +203,12 @@ const Topbar = () => {
           return response.json();
         })
         .then((data) => {
-          setOpinionArray(data.opinions || []);
+          setOpinionArray(data || []);
+          const userHasSubmitted = data.some(
+            (opinion: OpinionInterface) =>
+              opinion.author === localStorage.getItem("logged_user")
+          );
+          setHasUserSubmittedOpinion(userHasSubmitted);
         })
         .catch((error) => {
           console.error("Error fetching opinions:", error);

@@ -225,7 +225,6 @@ const LoginScreen = () => {
           setApiError(errorData.message || "Failed to create account");
           return;
         }
-
         const { token, isAdmin } = await response.json();
         localStorage.setItem("isAdmin", isAdmin ? "admin" : "");
         localStorage.setItem("token", token);
