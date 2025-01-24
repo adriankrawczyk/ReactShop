@@ -51,29 +51,29 @@ Witaj w ReactShop! Poniżej znajdziesz zrzuty ekranu ze strony, które pokazują
 
 ---
 
-## Jak uruchomić projekt?
+# Jak uruchomić projekt?
 
-# Frontend
+## Frontend
 
 ````
 npm install
 npm run dev
 ````
 
-# Backend
+## Backend
 ````
 cd server
 nodemon index.js
 ````
 ## Technologie
 
-# Frontend: React, Typescript
+### Frontend: React, Typescript
 
-# Backend: Node.js, Express, MongoDB
+### Backend: Node.js, Express, MongoDB
 
-# Autentykacja: JWT (JSON Web Tokens)
+### Autentykacja: JWT (JSON Web Tokens)
 
-# Inne narzędzia: Postman, Git, GitHub
+### Inne narzędzia: Postman, Git, GitHub
 
 ## Autor
-# Adrian Krawczyk
+### Adrian Krawczyk
