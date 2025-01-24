@@ -152,7 +152,6 @@ export const useItemMapperLogic = () => {
     boughtMode,
     activeCategoryArray,
     data,
-    uniqueCategories,
   ]);
 
   return {
