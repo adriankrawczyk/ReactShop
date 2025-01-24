@@ -27,8 +27,8 @@ const TopbarContainer = styled.div`
 
 const CartButton = styled.div<{ $active?: boolean; $empty?: boolean }>`
   cursor: pointer;
-  width: 8vh;
-  height: 8vh;
+  width: 8vmin;
+  height: 8vmin;
   border: 2px solid #bbb;
   display: flex;
   align-items: center;
@@ -40,8 +40,8 @@ const CartButton = styled.div<{ $active?: boolean; $empty?: boolean }>`
 
 const HistoryButton = styled.div<{ $active?: boolean; $empty?: boolean }>`
   cursor: pointer;
-  width: 8vh;
-  height: 8vh;
+  width: 8vmin;
+  height: 8vmin;
   border: 2px solid #bbb;
   display: flex;
   align-items: center;
@@ -53,8 +53,8 @@ const HistoryButton = styled.div<{ $active?: boolean; $empty?: boolean }>`
 
 const LogoutButton = styled.div`
   cursor: pointer;
-  width: 8vh;
-  height: 8vh;
+  width: 8vmin;
+  height: 8vmin;
   border: 2px solid #bbb;
   position: absolute;
   left: 1.5vw;
@@ -119,6 +119,26 @@ const InputIconContainer = styled.div`
   position: absolute;
   right: 1vmax;
   font-size: 2vmax;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+
+  @media (max-width: 480px) {
+    font-size: 12px;
+    align-items: flex-start;
+    height: 28px;
+    overflow: visible;
+    width: auto;
+  }
+`;
+const StarsContainer = styled.div`
+  display: flex;
+  gap: 2px;
+
+  @media (max-width: 480px) {
+    flex-wrap: wrap;
+    width: 50px;
+  }
 `;
 
 const Topbar = () => {
@@ -251,7 +271,10 @@ const Topbar = () => {
             : signOut
         }
       >
-        <FontAwesomeIcon icon={faSignOut}></FontAwesomeIcon>
+        <FontAwesomeIcon
+          style={{ fontSize: "4vmin" }}
+          icon={faSignOut}
+        ></FontAwesomeIcon>
       </LogoutButton>
 
       {(currentOpinionItemTitle.length === 0 ||
@@ -278,21 +301,22 @@ const Topbar = () => {
             {isLoading ? (
               <></>
             ) : currentOpinionItemTitle ? (
-              [...Array(5)].map((el, index) => (
-                <FontAwesomeIcon
-                  key={index}
-                  icon={faStar}
-                  style={{
-                    color: index < rating ? "gold" : "gray",
-                    cursor: "pointer",
-                    marginLeft: "5px",
-                  }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setRating(index + 1);
-                  }}
-                />
-              ))
+              <StarsContainer>
+                {[...Array(5)].map((el, index) => (
+                  <FontAwesomeIcon
+                    key={index}
+                    icon={faStar}
+                    style={{
+                      color: index < rating ? "gold" : "gray",
+                      cursor: "pointer",
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setRating(index + 1);
+                    }}
+                  />
+                ))}
+              </StarsContainer>
             ) : (
               <FontAwesomeIcon icon={faSearch} />
             )}
@@ -307,10 +331,14 @@ const Topbar = () => {
             if (!isCartEmpty) {
               setCartMode(!cartMode);
               if (boughtMode) setBoughtMode(false);
+              setCurrentOpinionItemTitle("");
             }
           }}
         >
-          <FontAwesomeIcon style={{}} icon={faCartShopping} />
+          <FontAwesomeIcon
+            style={{ fontSize: "4vmin" }}
+            icon={faCartShopping}
+          />
         </CartButton>
         <HistoryButton
           $empty={isHistoryEmpty}
@@ -319,10 +347,11 @@ const Topbar = () => {
             if (!isHistoryEmpty) {
               setBoughtMode(!boughtMode);
               if (cartMode) setCartMode(false);
+              setCurrentOpinionItemTitle("");
             }
           }}
         >
-          <FontAwesomeIcon style={{}} icon={faDollarSign} />
+          <FontAwesomeIcon style={{ fontSize: "4vmin" }} icon={faDollarSign} />
         </HistoryButton>
       </RightButtonsContainer>
     </TopbarContainer>

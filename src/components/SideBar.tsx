@@ -24,16 +24,14 @@ const CategoryBar = styled.div<{ $active: boolean }>`
   background-color: ${({ $active }) =>
     $active ? ColorScheme.green : "transparent"};
   cursor: pointer;
-  transition: font-size 0.25s ease-in-out;
   font-size: 1.2vw;
-  &:hover {
-    font-size: 1.33vw;
+  &:hover > div {
+    transform: scale(1.1);
+    transition: transform 0.25s ease-in-out;
   }
 `;
 
-const BuyText = styled.div`
-  ${WithTransition()}
-`;
+const BuyText = styled.div``;
 
 const BuyButton = styled.div`
   width: 12vw;
@@ -45,18 +43,21 @@ const BuyButton = styled.div`
   justify-content: center;
   align-items: center;
   font-weight: 600;
-  font-size: 2vmax;
+  font-size: 2.5vmax;
   cursor: pointer;
   border-bottom-left-radius: 15%;
   bottom: 0;
+  &:hover > div {
+    transition: transform 0.25s ease-in-out;
+    transform: scale(1.125);
+  }
 `;
 
 const PriceDisplayer = styled.div`
   width: 12vw;
-  height: 75px;
+  min-height: 75px;
   border: 1px solid #bbb;
   bottom: 75px;
-
   left: 0;
   border-bottom: 0;
   border-left: 0;
@@ -66,7 +67,15 @@ const PriceDisplayer = styled.div`
   justify-content: center;
   align-items: center;
   font-weight: 600;
-  font-size: 2vmax;
+  padding: 8px;
+  text-align: center;
+  font-size: max(2vmax, 2.5vh);
+  line-height: 1.2;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  hyphens: auto;
+  display: grid;
+  place-items: center;
 `;
 const SideBar = () => {
   const { cart, data, bought, setBought, setCart } = useAppContext();
@@ -160,11 +169,13 @@ const SideBar = () => {
             key={index}
             onClick={() => handleCategoryClick(index)}
           >
-            {category}
+            <div>{category}</div>
           </CategoryBar>
         );
       })}
-      <PriceDisplayer>{totalPrice}$</PriceDisplayer>
+      <PriceDisplayer>
+        <span>{totalPrice}$</span>
+      </PriceDisplayer>
       <BuyButton onClick={handleBuy}>
         <BuyText>Buy</BuyText>
       </BuyButton>
