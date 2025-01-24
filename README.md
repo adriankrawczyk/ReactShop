@@ -6,39 +6,39 @@ Witaj w projekcie ReactShop! Poniżej znajdziesz zrzuty ekranu z aplikacji, któ
 
 ## Zrzuty ekranu
 
-### 1. Strona główna
+### 1. Logowanie
 
-[<img alt="Strona główna" width="300px" src="https://i.ibb.co/mBXp9W5/image.png" />](https://ibb.co/mBXp9W5)
-
----
-
-### 2. Koszyk użytkownika
-
-[<img alt="Koszyk użytkownika" width="300px" src="https://i.ibb.co/74BC4XW/image.png" />](https://ibb.co/74BC4XW)
+[<img alt="Strona główna" width="1080px" src="https://i.ibb.co/mBXp9W5/image.png" />](https://ibb.co/mBXp9W5)
 
 ---
 
-### 3. Historia zakupów
+### 2. Walidacja
 
-[<img alt="Historia zakupów" width="300px" src="https://i.ibb.co/ncsQ9Ht/image.png" />](https://ibb.co/ncsQ9Ht)
+[<img alt="Koszyk użytkownika" width="1080px" src="https://i.ibb.co/74BC4XW/image.png" />](https://ibb.co/74BC4XW)
+
+---
+
+### 3. Rejestracja
+
+[<img alt="Historia zakupów" width="1080px" src="https://i.ibb.co/ncsQ9Ht/image.png" />](https://ibb.co/ncsQ9Ht)
 
 ---
 
 ### 4. Strona produktu
 
-[<img alt="Strona produktu" width="300px" src="https://i.ibb.co/r6Yzd1G/image.png" />](https://ibb.co/r6Yzd1G)
+[<img alt="Strona produktu" width="1080px" src="https://i.ibb.co/r6Yzd1G/image.png" />](https://ibb.co/r6Yzd1G)
 
 ---
 
 ### 5. Logowanie użytkownika
 
-[<img alt="Logowanie użytkownika" width="300px" src="https://i.ibb.co/GTHL9Y0/image.png" />](https://ibb.co/GTHL9Y0)
+[<img alt="Logowanie użytkownika" width="1080px" src="https://i.ibb.co/GTHL9Y0/image.png" />](https://ibb.co/GTHL9Y0)
 
 ---
 
 ### 6. Rejestracja użytkownika
 
-[<img alt="Rejestracja użytkownika" width="300px" src="https://i.ibb.co/tYWM6wt/image.png" />](https://ibb.co/tYWM6wt)
+[<img alt="Rejestracja użytkownika" width="1080px" src="https://i.ibb.co/tYWM6wt/image.png" />](https://ibb.co/tYWM6wt)
 
 ---
 
