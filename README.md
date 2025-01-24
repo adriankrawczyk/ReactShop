@@ -2,8 +2,6 @@
 
 Witaj w ReactShop! Poniżej znajdziesz zrzuty ekranu ze strony, które pokazują jej główne funkcje i interfejs użytkownika.
 
----
-
 ## Zrzuty ekranu
 
 ### 1. Logowanie
@@ -56,13 +54,21 @@ Witaj w ReactShop! Poniżej znajdziesz zrzuty ekranu ze strony, które pokazują
 ## Jak uruchomić projekt?
 
 # Frontend
+
+````
+```
 npm install
 npm run dev
+```
+````
 
 # Backend
+````
+```
 cd server
 nodemon index.js
-
+```
+````
 ## Technologie
 
 Frontend: React, Typescript
