@@ -90,7 +90,7 @@ const Topbar = () => {
               <></>
             ) : currentOpinionItemTitle ? (
               <StarsContainer>
-                {[...Array(5)].map((el, index) => (
+                {[...Array(5)].map((_, index) => (
                   <FontAwesomeIcon
                     key={index}
                     icon={faStar}

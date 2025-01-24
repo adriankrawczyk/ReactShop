@@ -1,8 +1,0 @@
-na teraz:
--responsywność
-
-
-na później
-• operacje CRUD mogą być zamkockowane w pliku JSON
-• stworzenie dokumentacji w READ.ME !!!
-• dokumentacja Postman
