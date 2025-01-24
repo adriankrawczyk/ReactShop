@@ -1,6 +1,6 @@
-# ReactShop - Projekt Sklepu Internetowego
+# ReactShop - Projekt Sklepu Internetowego na przedmiot Wprowadzenie do Aplikacji Internetowych 2024/2025.
 
-Witaj w projekcie ReactShop! Poniżej znajdziesz zrzuty ekranu z aplikacji, które pokazują jej główne funkcje i interfejs użytkownika.
+Witaj w ReactShop! Poniżej znajdziesz zrzuty ekranu ze strony, które pokazują jej główne funkcje i interfejs użytkownika.
 
 ---
 
@@ -24,48 +24,46 @@ Witaj w projekcie ReactShop! Poniżej znajdziesz zrzuty ekranu z aplikacji, któ
 
 ---
 
-### 4. Strona produktu
+### 4. Strona główna
 
 ![Strona produktu](./public/4.png)
 
 ---
 
-### 5. Logowanie użytkownika
+### 5. Wyszukiwanie po kategorii i nazwie
 
 ![Logowanie użytkownika](./public/5.png)
 
 ---
 
-### 6. Rejestracja użytkownika
+### 6. Koszyk
 
-![Rejestracja użytkownika](./public/6.png)
+![Rejestracja użytkownika](./public/7.png)
+
+---
+
+### 7. Koszyk
+
+![Rejestracja użytkownika](./public/7.png)
+
+---
+### 8. Opinie
+
+![Rejestracja użytkownika](./public/7.png)
 
 ---
 
 ## Jak uruchomić projekt?
 
-1. Sklonuj repozytorium:
-   ```bash
-   git clone https://github.com/twoja-nazwa-uzytkownika/reactshop.git
-   Przejdź do katalogu projektu:
-   ```
-
-bash
-Copy
-cd reactshop
-Zainstaluj zależności:
-
-bash
-Copy
+# Frontend
 npm install
-Uruchom serwer deweloperski:
+npm run dev
 
-bash
-Copy
-npm start
-Otwórz przeglądarkę i przejdź do http://localhost:3000.
+# Backend
+cd server
+nodemon index.js
 
-Technologie
+## Technologie
 
 Frontend: React, Typescript
 
