@@ -13,7 +13,6 @@ import {
   faStar,
   faMessage,
 } from "@fortawesome/free-solid-svg-icons";
-
 const ItemElement = styled.div`
   display: flex;
   width: 90%;
@@ -26,56 +25,38 @@ const ItemElement = styled.div`
   );
   border: 2px solid #bbb;
   flex-shrink: 0;
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    height: auto;
+    width: 100%;
+    margin-bottom: 2vh;
+    padding: 10px;
+    align-items: center;
+  }
 `;
 
 const ImageContainer = styled.div`
   width: 200px;
   height: 100%;
-  border-right: 2px solid #bbb;
+  border-right: 2px solid ${StyleScheme.borderColor};
   display: flex;
   justify-content: flex-end;
-`;
-
-const TitleContainer = styled.div`
-  width: 15vw;
-  padding: 1vw;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 1.5vmax;
-  font-weight: 600;
-  text-align: center;
-  border-right: 2px solid #bbb;
-  word-wrap: break-word;
-`;
-
-const TitleAndDescriptionContainer = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const Description = styled.div`
-  font-size: 0.75em;
-  padding: 0.25vmax;
-  top: 0%;
-  left: 6vmax;
-  word-wrap: break-word;
-  width: 45%;
-  scrollbar-width: thin;
-  padding-right: 0.5vmax;
-  height: 18vh;
-  position: absolute;
-  overflow-y: scroll;
-  display: none;
-  @media (min-width: 764px) {
-    display: block;
+  @media (max-width: 480px) {
+    width: 70%;
+    justify-content: center;
+    margin-right: 2%;
   }
 `;
 
 const Image = styled.img`
   width: 120px;
   border-left: 2px solid #bbb;
+  @media (max-width: 480px) {
+    width: 100%;
+    height: auto;
+    border: 2px solid ${StyleScheme.borderColor};
+  }
 `;
 
 const ItemInfo = styled.div`
@@ -83,6 +64,16 @@ const ItemInfo = styled.div`
   width: 80px;
   display: flex;
   justify-content: center;
+
+  @media (max-width: 480px) {
+    width: 100%;
+    position: static;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 50px;
+    margin-right: 5%;
+  }
 `;
 
 const Price = styled.div`
@@ -90,6 +81,12 @@ const Price = styled.div`
   position: absolute;
   top: 20px;
   font-size: 1.2em;
+
+  @media (max-width: 480px) {
+    position: static;
+    font-size: 3vmax;
+    text-align: center;
+  }
 `;
 
 const AddButton = styled.div<{ $add: boolean }>`
@@ -107,24 +104,101 @@ const AddButton = styled.div<{ $add: boolean }>`
   cursor: pointer;
 
   ${WithTransition()}
+
+  @media (max-width: 480px) {
+    position: static;
+    width: 50px;
+    height: 50px;
+    margin-top: 10px;
+  }
+`;
+
+const TitleContainer = styled.div`
+  width: 15vw;
+  padding: 1vw;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.25vmax;
+  font-weight: 600;
+  text-align: center;
+  border-right: 2px solid #bbb;
+  word-wrap: break-word;
+
+  @media (max-width: 480px) {
+    width: 120%;
+    font-size: 1.5em;
+    padding: 10px;
+    border-right: none;
+    border-bottom: 2px solid #bbb;
+  }
+`;
+
+const TitleAndDescriptionContainer = styled.div`
+  display: flex;
+  align-items: center;
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    width: 100%;
+  }
+`;
+
+const Description = styled.div`
+  font-size: 0.75em;
+  padding: 0.25vmax;
+  top: 0%;
+  left: 6vmax;
+  word-wrap: break-word;
+  width: 45%;
+  scrollbar-width: thin;
+  padding-right: 0.5vmax;
+  height: 100%;
+  position: absolute;
+  overflow-y: scroll;
+  display: none;
+
+  @media (min-width: 764px) {
+    display: block;
+  }
+
+  @media (max-width: 480px) {
+    position: static;
+    width: 100%;
+    height: auto;
+    padding: 10px;
+    overflow-y: visible;
+    display: block;
+    font-size: 1em;
+  }
 `;
 
 const OtherInfoContainer = styled.div`
   width: 35vw;
   height: 100%;
   position: relative;
+
+  @media (max-width: 480px) {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
 const StarsContainer = styled.div`
   position: absolute;
-  right: 0;
+  right: 0.5vmax;
+  top: 0.5vmax;
 
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 2.2vmin;
   gap: 0.1vw;
-  flex-direction: column;
+  flex-direction: row;
 
   @media (max-width: 1080px) {
     display: grid;
@@ -135,10 +209,11 @@ const StarsContainer = styled.div`
     margin-right: 0.5vmin;
   }
 
-  @media (min-width: 1080px) {
-    flex-direction: row;
-    margin-top: 1vmin;
-    margin-right: 1vmin;
+  @media (max-width: 480px) {
+    position: static;
+    margin-top: 10px;
+    font-size: 1.5em;
+    gap: 5px;
   }
 `;
 
@@ -159,6 +234,15 @@ const MessageButton = styled.div`
   background-color: white;
   cursor: pointer;
   ${WithTransition()}
+
+  @media (max-width: 480px) {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    font-size: 2.5vmax;
+
+    margin: 10px 0;
+  }
 `;
 
 const MessageQuantityDisplayer = styled.div`
@@ -175,7 +259,16 @@ const MessageQuantityDisplayer = styled.div`
   top: -1vmax;
   right: -1vmax;
   border-radius: 50%;
+
+  @media (max-width: 480px) {
+    top: -10px;
+    right: -10px;
+    width: 25px;
+    height: 25px;
+    font-size: 0.8em;
+  }
 `;
+
 const QuantityDisplayer = styled.div`
   position: absolute;
   width: 5vmax;
@@ -186,14 +279,30 @@ const QuantityDisplayer = styled.div`
   flex-direction: column;
   gap: 1.5vmax;
   border-right: 2px solid ${StyleScheme.borderColor};
+
   @media (max-width: 555px) {
     border-right: none;
   }
+
+  @media (max-width: 480px) {
+    position: static;
+    width: 100%;
+    height: auto;
+    margin-top: 10px;
+    flex-direction: row;
+    gap: 10px;
+  }
 `;
+
 const QuantityText = styled.div`
   font-size: 1.1vmax;
   font-weight: 600;
+
+  @media (max-width: 480px) {
+    font-size: 1.2em;
+  }
 `;
+
 const Quantity = styled.div`
   cursor: default;
   font-weight: 600;
@@ -206,8 +315,13 @@ const Quantity = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-`;
 
+  @media (max-width: 480px) {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2em;
+  }
+`;
 const Item = ({
   title,
   image,

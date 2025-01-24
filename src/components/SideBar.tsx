@@ -45,7 +45,7 @@ const BuyButton = styled.div`
   justify-content: center;
   align-items: center;
   font-weight: 600;
-  font-size: 2em;
+  font-size: 2vmax;
   cursor: pointer;
   border-bottom-left-radius: 15%;
   bottom: 0;
@@ -66,7 +66,7 @@ const PriceDisplayer = styled.div`
   justify-content: center;
   align-items: center;
   font-weight: 600;
-  font-size: 1.5em;
+  font-size: 2vmax;
 `;
 const SideBar = () => {
   const { cart, data, bought, setBought, setCart } = useAppContext();

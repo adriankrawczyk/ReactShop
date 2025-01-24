@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import OpinionInterface from "../Interfaces/OpinionInterface";
 
 const TopbarContainer = styled.div`
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -26,11 +27,11 @@ const TopbarContainer = styled.div`
 
 const CartButton = styled.div<{ $active?: boolean; $empty?: boolean }>`
   cursor: pointer;
-  width: 50px;
-  height: 50px;
+  width: 8vh;
+  height: 8vh;
   border: 2px solid #bbb;
+  right: 8vw;
   position: absolute;
-  right: 7vw;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -41,11 +42,11 @@ const CartButton = styled.div<{ $active?: boolean; $empty?: boolean }>`
 
 const HistoryButton = styled.div<{ $active?: boolean; $empty?: boolean }>`
   cursor: pointer;
-  width: 50px;
-  height: 50px;
+  width: 8vh;
+  height: 8vh;
+  right: 2vw;
   border: 2px solid #bbb;
   position: absolute;
-  right: 2vw;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -56,24 +57,24 @@ const HistoryButton = styled.div<{ $active?: boolean; $empty?: boolean }>`
 
 const LogoutButton = styled.div`
   cursor: pointer;
-  width: 50px;
-  height: 50px;
+  width: 8vh;
+  height: 8vh;
   border: 2px solid #bbb;
   position: absolute;
   left: 2vw;
   display: flex;
   align-items: center;
-  font-size: 2vw;
   justify-content: center;
   background-color: ${ColorScheme.red};
   ${WithTransition()};
 `;
 
 const InputContainer = styled.div`
-  position: relative;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-20vw);
   width: 50vw;
   height: 10vh;
-  margin-left: 10vw;
   display: flex;
   align-items: center;
 `;
@@ -91,8 +92,8 @@ const Spinner = styled.div`
   border: 4px solid rgba(0, 0, 0, 0.1);
   border-left-color: ${ColorScheme.green};
   border-radius: 50%;
-  width: 30px;
-  height: 30px;
+  width: 3vmax;
+  height: 3vmax;
   animation: spin 1s linear infinite;
 
   @keyframes spin {
@@ -105,10 +106,7 @@ const Spinner = styled.div`
 const Input = styled.input<{ isLoading?: boolean }>`
   width: 100%;
   height: 100%;
-  border-right: 1px solid #bbb;
-  border-left: 1px solid #bbb;
-  border-top: 0;
-  border-bottom: 0;
+  border: 1px solid #bbb;
   font-size: 2vmax;
   padding-left: 1vmax;
   outline: none;
@@ -236,9 +234,11 @@ const Topbar = () => {
 
   return (
     <TopbarContainer>
-      {currentOpinionItemTitle.length
-        ? ""
-        : `Hello, ${localStorage.getItem("logged_user")}`}
+      <div style={{ position: "absolute", left: "10vw" }}>
+        {currentOpinionItemTitle.length
+          ? ""
+          : `Hello, ${localStorage.getItem("logged_user")}`}
+      </div>
       <LogoutButton
         onClick={
           currentOpinionItemTitle.length
@@ -309,7 +309,7 @@ const Topbar = () => {
           }
         }}
       >
-        <FontAwesomeIcon style={{ fontSize: "2em" }} icon={faCartShopping} />
+        <FontAwesomeIcon style={{ fontSize: "2vmax" }} icon={faCartShopping} />
       </CartButton>
       <HistoryButton
         $empty={isHistoryEmpty}
@@ -321,7 +321,7 @@ const Topbar = () => {
           }
         }}
       >
-        <FontAwesomeIcon style={{ fontSize: "2em" }} icon={faDollarSign} />
+        <FontAwesomeIcon style={{ fontSize: "2vmax" }} icon={faDollarSign} />
       </HistoryButton>
     </TopbarContainer>
   );
