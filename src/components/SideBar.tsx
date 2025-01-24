@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useAppContext } from "../AppContext";
 import { useEffect, useState } from "react";
-import { ColorScheme, WithTransition } from "../Schemes/StyleScheme";
+import { ColorScheme } from "../Schemes/StyleScheme";
 
 const SideBarContainer = styled.div`
   position: absolute;

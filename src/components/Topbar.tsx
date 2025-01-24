@@ -180,16 +180,36 @@ const Topbar = () => {
   useEffect(() => {
     if (currentOpinionItemTitle) {
       setIsLoading(true);
+
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.error("No token found. Please log in.");
+        setIsLoading(false);
+        return;
+      }
+
       fetch(
-        `http://localhost:5000/api/items/${currentOpinionItemTitle}/opinions`
+        `http://localhost:5000/api/items/${currentOpinionItemTitle}/opinion`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       )
-        .then((response) => response.json())
-        .then((opinions) => {
-          setOpinionArray(opinions);
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Failed to fetch opinions");
+          }
+          return response.json();
         })
-        .catch((error) => console.error("Error fetching opinions:", error))
+        .then((data) => {
+          setOpinionArray(data.opinions || []);
+        })
+        .catch((error) => {
+          console.error("Error fetching opinions:", error);
+        })
         .finally(() => {
-          setTimeout(() => setIsLoading(false), 100);
+          setTimeout(() => setIsLoading(false), 200);
         });
     }
   }, [currentOpinionItemTitle, setIsLoading, setOpinionArray]);

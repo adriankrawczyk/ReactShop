@@ -61,7 +61,7 @@ const FormContainer = styled.div`
 `;
 
 const FormTitle = styled.h2`
-  margin-bottom: 10px;
+  margin-top: 10px;
   font-size: 26px;
   color: black;
 `;
@@ -200,7 +200,8 @@ const LoginScreen = () => {
           return;
         }
 
-        const { token } = await response.json();
+        const { token, isAdmin } = await response.json();
+        localStorage.setItem("isAdmin", isAdmin ? "admin" : "");
         localStorage.setItem("token", token);
         localStorage.setItem("logged_user", username);
         navigate("/shop");
@@ -225,7 +226,8 @@ const LoginScreen = () => {
           return;
         }
 
-        const { token } = await response.json();
+        const { token, isAdmin } = await response.json();
+        localStorage.setItem("isAdmin", isAdmin ? "admin" : "");
         localStorage.setItem("token", token);
         localStorage.setItem("logged_user", username);
         navigate("/shop");

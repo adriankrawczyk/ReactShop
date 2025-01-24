@@ -227,6 +227,26 @@ app.post("/api/items/buy", authMiddleware, async (req, res) => {
   }
 });
 
+app.get("/api/items/:title/opinion", authMiddleware, async (req, res) => {
+  try {
+    const { title } = req.params;
+
+    if (!title) {
+      return res.status(400).json({ message: "Title is required." });
+    }
+
+    const item = await db.collection("Items").findOne({ title });
+
+    if (!item) {
+      return res.status(404).json({ message: "Item not found." });
+    }
+    res.status(200).json(item.opinions || []);
+  } catch (error) {
+    console.error("Error fetching opinions:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
 app.delete("/api/items/:title/opinion", authMiddleware, async (req, res) => {
   try {
     const { title } = req.params;
