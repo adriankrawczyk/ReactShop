@@ -40,12 +40,12 @@ Witaj w ReactShop! Poniżej znajdziesz zrzuty ekranu ze strony, które pokazują
 
 ---
 
-### 7. Koszyk
+### 7. Opinie
 
 ![Rejestracja użytkownika](./public/10.png)
 
 ---
-### 8. Opinie
+### 8. Dodana opinia
 
 ![Rejestracja użytkownika](./public/11.png)
 
