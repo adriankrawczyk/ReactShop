@@ -1,79 +1,82 @@
-# ReactShop - Projekt Sklepu Internetowego na przedmiot Wprowadzenie do Aplikacji Internetowych 2024/2025.
+# ReactShop - Online Store Project for the Introduction to Web Applications Course 2024/2025.
 
-Witaj w ReactShop! Poniżej znajdziesz zrzuty ekranu ze strony, które pokazują jej główne funkcje i interfejs użytkownika.
+Welcome to ReactShop! Below, you will find screenshots of the website showcasing its main features and user interface.
 
-## Zrzuty ekranu
+## Screenshots
 
-### 1. Logowanie
+### 1. Login
 
-![Logowanie](./public/1.png)
-
----
-
-### 2. Walidacja
-
-![Walidacja](./public/2.png)
+![Login](./public/1.png)
 
 ---
 
-### 3. Rejestracja
+### 2. Validation
 
-![Rejestracja](./public/3.png)
-
----
-
-### 4. Strona główna
-
-![Strona produktu](./public/4.png)
+![Validation](./public/2.png)
 
 ---
 
-### 5. Wyszukiwanie po kategorii i nazwie
+### 3. Registration
 
-![Logowanie użytkownika](./public/5.png)
-
----
-
-### 6. Koszyk
-
-![Rejestracja użytkownika](./public/7.png)
+![Registration](./public/3.png)
 
 ---
 
-### 7. Opinie
+### 4. Home Page
 
-![Rejestracja użytkownika](./public/10.png)
-
----
-### 8. Dodana opinia
-
-![Rejestracja użytkownika](./public/11.png)
+![Product Page](./public/4.png)
 
 ---
 
-# Jak uruchomić projekt?
+### 5. Search by Category and Name
+
+![User Login](./public/5.png)
+
+---
+
+### 6. Cart
+
+![User Registration](./public/7.png)
+
+---
+
+### 7. Reviews
+
+![User Registration](./public/10.png)
+
+---
+
+### 8. Added Review
+
+![User Registration](./public/11.png)
+
+---
+
+# How to Run the Project?
 
 ## Frontend
 
-````
+```
 npm install
 npm run dev
-````
+```
 
 ## Backend
-````
+
+```
 cd server
 nodemon index.js
-````
-## Technologie
+```
 
-### Frontend: React, Typescript
+## Technologies
+
+### Frontend: React, TypeScript
 
 ### Backend: Node.js, Express, MongoDB
 
-### Autentykacja: JWT (JSON Web Tokens)
+### Authentication: JWT (JSON Web Tokens)
 
-### Inne narzędzia: Postman, Git, GitHub
+### Other Tools: Postman, Git, GitHub
 
-## Autor
+## Author
 ### Adrian Krawczyk
